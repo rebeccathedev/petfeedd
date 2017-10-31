@@ -1,0 +1,18 @@
+{
+  "name": "petfeedd",
+  "version": "1.0.0",
+  "description": "A pet feeding daemon.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rob Peck <rob@robpeck.com>",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0"
+  }
+}
