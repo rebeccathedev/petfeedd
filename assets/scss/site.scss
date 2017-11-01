@@ -1,6 +1,6 @@
 @import "bootstrap";
 
-.feed, .button-container {
+.feed, .event, .button-container {
     margin-top: $padding-base-vertical;
     margin-bottom: $padding-base-vertical;
     padding: $padding-base-vertical;
@@ -10,6 +10,6 @@
     border-bottom: 1px solid #ddd;
 }
 
-.feed:nth-of-type(even) {
+.feed:nth-of-type(even), .event:nth-of-type(even) {
     background-color: #eee;
 }

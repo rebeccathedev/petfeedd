@@ -13,6 +13,36 @@
         </div>
     </div>
 
+    <script type="x-template" id="home">
+        <div class="home-container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <button class="btn btn-lg btn-success" v-on:click='feedNow()'>Feed Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Feed Log</h1>
+                </div>
+            </div>
+
+            <div class="row event" v-for="event in events">
+                <div class="col-md-2">
+                    {{ event.date_created }}
+                </div>
+                <div class="col-md-1">
+                    {{ event.size }} feeds
+                </div>
+                <div class="col-md-9">
+                    {{ event.name }}
+                </div>
+            </div>
+        </div>
+    </script>
+
     <script type="x-template" id="routing">
         <nav class="navbar navbar-default">
             <div class="container">
