@@ -31,6 +31,8 @@ class MyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.time):
             return obj.isoformat()
+        elif isinstance(obj, datetime.datetime):
+            return obj.isoformat()
 
         return json.JSONEncoder.default(self, obj)
 
@@ -48,6 +50,10 @@ def web_worker(feed_queue):
     @app.route('/')
     def index():
         return render_template('index.html')
+
+    @app.route('/api/events', methods=['GET'])
+    def events():
+        return get_events()
 
     # A route that gets or updates settings.
     @app.route('/api/settings', methods=['GET', 'POST'])
@@ -86,6 +92,14 @@ def web_worker(feed_queue):
     # Start the built-in Flask server.
     app.run("127.0.0.1", 8080)
 
+
+# Gets feed events.
+def get_events():
+    feed_events = []
+    for feed_event in FeedEvent.select().dicts():
+        feed_events.append(feed_event)
+
+    return json.dumps(feed_events, cls=MyEncoder)
 
 # This function gets all settings.
 def get_settings():
