@@ -3,6 +3,10 @@ import socket
 
 class DiscoveryWorker(threading.Thread):
 
+    def __init__(self, config, *args, **kwargs):
+        self.config = config
+        super().__init__(*args, **kwargs)
+
     def run(self):
         print("Starting auto discovery worker.")
 
@@ -14,4 +18,5 @@ class DiscoveryWorker(threading.Thread):
 
             if data:
                 print("Discovery request received from " + address[0])
-                sent = sock.sendto(b"petfeedd\nHEAD\n8080", address)
+                info_string = "petfeedd\nHEAD\n" + self.config["web"]["bind_port"]
+                sent = sock.sendto(info_string.encode(), address)
