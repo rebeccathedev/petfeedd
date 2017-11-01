@@ -96,7 +96,7 @@ def web_worker(feed_queue):
 # Gets feed events.
 def get_events():
     feed_events = []
-    for feed_event in FeedEvent.select().dicts():
+    for feed_event in FeedEvent.select().order_by(FeedEvent.date_created.desc()).limit(50).dicts():
         feed_events.append(feed_event)
 
     return json.dumps(feed_events, cls=MyEncoder)

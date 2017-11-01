@@ -1,4 +1,3 @@
-var Home = { template: '<div></div>' }
 var Settings = { template: '<div></div>' }
 
 var t = new Date();
@@ -12,6 +11,30 @@ var DefaultFeed = {
 };
 
 var messageBus = new Vue();
+
+var Home = Vue.component('home', {
+    template: '#home',
+    data: function() {
+        return {
+            events: []
+        }
+    },
+    created: function() {
+        this.fetchData();
+    },
+    methods: {
+        feedNow() {
+            this.$http.post('/api/feed').then(function() {
+                this.fetchData();
+            });
+        },
+        fetchData() {
+            this.$http.get('/api/events').then(function(response) {
+                this.events = response.body;
+            });
+        }
+    }
+});
 
 var Routing = Vue.component('routing', {
     template: '#routing',
