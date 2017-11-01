@@ -14,4 +14,4 @@ class DiscoveryWorker(threading.Thread):
 
             if data:
                 print("Discovery request received from " + address[0])
-                sent = sock.sendto(b'petfeedd', address)
+                sent = sock.sendto(b"petfeedd\nHEAD\n8080", address)
