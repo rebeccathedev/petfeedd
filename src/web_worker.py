@@ -9,6 +9,7 @@ from flask import jsonify
 
 from models.Setting import Setting
 from models.Feed import Feed
+from models.FeedEvent import FeedEvent
 
 # Because we're using vue.js on the front end and vue uses {{}} for it's
 # templating, we need to create a custom Flask object that overrides jinja's
@@ -38,7 +39,9 @@ app = CustomFlask(__name__)
 
 # Define the web worker. This is the function that is passed to the thread to
 # start Flask.
-def web_worker():
+def web_worker(feed_queue):
+
+    print("Starting web worker.")
 
     # The main route returns the index page. Everything else is handled by the
     # API and Vue.js.
@@ -76,7 +79,9 @@ def web_worker():
     # A route that pushes an immediate feed into the stack.
     @app.route('/api/feed', methods=['POST'])
     def feed_now():
-        pass
+        feed_event = FeedEvent.create(size=1, name="On Demand")
+        feed_queue.put(feed_event)
+        return jsonify(True)
 
     # Start the built-in Flask server.
     app.run("127.0.0.1", 8080)
