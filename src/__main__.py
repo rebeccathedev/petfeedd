@@ -7,6 +7,7 @@ import queue
 
 from feed_worker import FeedWorker
 from time_worker import TimeWorker
+from discovery_worker import DiscoveryWorker
 from web_worker import web_worker
 
 from models.Setting import Setting
@@ -24,4 +25,5 @@ web_worker_thread.start()
 
 FeedWorker(feed_queue).start()
 TimeWorker(feed_queue).start()
+DiscoveryWorker().start()
 # feed_worker_thread.start()
