@@ -41,7 +41,7 @@ app = CustomFlask(__name__)
 
 # Define the web worker. This is the function that is passed to the thread to
 # start Flask.
-def web_worker(feed_queue):
+def web_worker(feed_queue, config):
 
     print("Starting web worker.")
 
@@ -90,7 +90,7 @@ def web_worker(feed_queue):
         return jsonify(True)
 
     # Start the built-in Flask server.
-    app.run("127.0.0.1", 8080)
+    app.run(config["web"]["bind_address"], config["web"]["bind_port"])
 
 
 # Gets feed events.
