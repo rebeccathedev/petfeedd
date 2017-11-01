@@ -1,5 +1,15 @@
 @import "bootstrap";
 
-html {
-    background-color: #fff;
+.feed, .button-container {
+    margin-top: $padding-base-vertical;
+    margin-bottom: $padding-base-vertical;
+    padding: $padding-base-vertical;
+}
+
+.feed {
+    border-bottom: 1px solid #ddd;
+}
+
+.feed:nth-of-type(even) {
+    background-color: #eee;
 }
