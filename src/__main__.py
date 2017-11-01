@@ -17,7 +17,7 @@ from distutils.util import strtobool
 from feed_worker import FeedWorker
 from time_worker import TimeWorker
 from discovery_worker import DiscoveryWorker
-from web_worker import web_worker
+from web_worker import WebWorker
 
 # Import all the models.
 from models.Setting import Setting
@@ -83,8 +83,7 @@ feed_queue = queue.Queue()
 
 # Start the web worker if requested.
 if strtobool(config["web"]["web_enabled"]) == 1:
-    web_worker_thread = threading.Thread(target=web_worker, args=(feed_queue,config,))
-    web_worker_thread.start()
+    WebWorker(feed_queue, config).start()
 
 # Start the workers. These workers should always run.
 FeedWorker(feed_queue).start()
