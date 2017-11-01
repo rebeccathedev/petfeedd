@@ -7,4 +7,4 @@ class Feed(BaseModel):
     name = CharField()
     size = IntegerField(default=0)
     feed_count = BigIntegerField(default=0)
-    last_feed = TimestampField(null = True)
+    last_feed = DateTimeField(null = True)

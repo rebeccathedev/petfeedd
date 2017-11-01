@@ -1,4 +1,3 @@
-import sqlite3
 import time
 import threading
 import queue
@@ -10,13 +9,19 @@ class FeedWorker(threading.Thread):
 
     def run(self):
         print("Starting feed worker.")
-        
+
         while True:
             try:
                 feed_event = self.feed_queue.get(timeout=3)
-                print(feed_event)
+                if feed_event:
+                    print("Found a feed event. Dispensing " + str(feed_event.size) + " feeds.")
+                    self.feed()
+                    
                 self.feed_queue.task_done()
             except queue.Empty:
                 pass
 
             time.sleep(1)
+
+    def feed(self):
+        pass
