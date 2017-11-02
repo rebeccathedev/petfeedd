@@ -92,7 +92,7 @@ class WebWorker(threading.Thread):
         @self.app.route('/api/feed', methods=['POST'])
         def feed_now():
             feed_event = FeedEvent.create(size=1, name="On Demand")
-            feed_queue.put(feed_event)
+            self.feed_queue.put(feed_event)
             return jsonify(True)
 
         # Start the built-in Flask server.
