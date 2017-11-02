@@ -1,10 +1,10 @@
 import time
-import threading
 import queue
 
+from worker import Worker
 from gpiozero import Servo
 
-class FeedWorker(threading.Thread):
+class FeedWorker(Worker):
     def __init__(self, feed_queue, config, *args, **kwargs):
         self.feed_queue = feed_queue
         self.config = config
@@ -14,8 +14,12 @@ class FeedWorker(threading.Thread):
         print("Starting feed worker.")
 
         while True:
+            if self.stopped():
+                print("Stopping feed worker.")
+                return
+
             try:
-                feed_event = self.feed_queue.get(timeout=3)
+                feed_event = self.feed_queue.get(timeout=1)
                 if feed_event:
                     print("Found a feed event. Dispensing " + str(feed_event.size) + " feeds.")
                     self.feed(feed_event.size)
@@ -23,8 +27,6 @@ class FeedWorker(threading.Thread):
                 self.feed_queue.task_done()
             except queue.Empty:
                 pass
-
-            time.sleep(1)
 
     def feed(self, feed_size):
         feed_size_time = float(self.config["gpio"]["servo_feed_time"] * feed_size)
