@@ -2,6 +2,7 @@
 import threading
 import configparser
 import argparse
+import signal
 import queue
 import sys
 import os
@@ -81,14 +82,30 @@ db.create_tables([Setting, Feed, FeedEvent], safe=True)
 # Create a sharted feeding queue that will be used by several workers.
 feed_queue = queue.Queue()
 
+# Holds our thread pool.
+thread_pool = []
+
 # Start the web worker if requested.
 if strtobool(config["web"]["web_enabled"]) == 1:
-    WebWorker(feed_queue, config).start()
+    thread_pool.append(WebWorker(feed_queue, config).begin())
 
 # Start the workers. These workers should always run.
-FeedWorker(feed_queue, config).start()
-TimeWorker(feed_queue).start()
+thread_pool.append(FeedWorker(feed_queue, config).begin())
+thread_pool.append(TimeWorker(feed_queue).begin())
 
 # Start the auto discovery worker if requested.
 if strtobool(config["general"]["discovery_enabled"]) == 1:
-    DiscoveryWorker(config).start()
+    thread_pool.append(DiscoveryWorker(config).begin())
+
+# Shutdown handling when we receive SIGINT, end all the threads gracefully.
+def sigint_signal(signal, frame):
+    print("Shutting down.")
+    for thread in thread_pool:
+        thread.end()
+
+# Trap the SIGINT signal.
+signal.signal(signal.SIGINT, sigint_signal)
+
+# Join all the threads.
+for thread in thread_pool:
+    thread.join(timeout=3)

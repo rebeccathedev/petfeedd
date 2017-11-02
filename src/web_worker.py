@@ -1,6 +1,6 @@
 import json
 import datetime
-import threading
+import urllib.request
 from time import mktime
 
 from flask import Flask
@@ -8,6 +8,7 @@ from flask import render_template
 from flask import request
 from flask import jsonify
 
+from worker import Worker
 from models.Setting import Setting
 from models.Feed import Feed
 from models.FeedEvent import FeedEvent
@@ -38,7 +39,7 @@ class MyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 # Create our web worker class.
-class WebWorker(threading.Thread):
+class WebWorker(Worker):
 
     # Initializes the class.
     def __init__(self, feed_queue, config, *args, **kwargs):
@@ -55,6 +56,7 @@ class WebWorker(threading.Thread):
         # API and Vue.js.
         @self.app.route('/')
         def index():
+            print(request.environ)
             return render_template('index.html')
 
         @self.app.route('/api/events', methods=['GET'])
@@ -95,9 +97,25 @@ class WebWorker(threading.Thread):
             self.feed_queue.put(feed_event)
             return jsonify(True)
 
+        # A special endpoint that shuts down the server
+        @self.app.route('/api/shutdown')
+        def shutdown():
+            # Only process this if it originated from us.
+            if request.environ["REMOTE_ADDR"] == self.config["web"]["bind_address"]:
+                print("Stopping web worker.")
+                func = request.environ.get('werkzeug.server.shutdown')
+                func()
+
+            return jsonify(True)
+
         # Start the built-in Flask server.
         self.app.run(self.config["web"]["bind_address"], self.config["web"]["bind_port"])
 
+    # Overrides the end method to shut down the thread gracefully.
+    def end(self):
+        # HAX.
+        urllib.request.urlopen("http://" + self.config["web"]["bind_address"] + ":" + self.config["web"]["bind_port"] + "/api/shutdown").read()
+        return super(WebWorker, self).end()
 
     # Gets feed events.
     def get_events(self):
