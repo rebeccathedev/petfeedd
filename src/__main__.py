@@ -86,7 +86,7 @@ if strtobool(config["web"]["web_enabled"]) == 1:
     WebWorker(feed_queue, config).start()
 
 # Start the workers. These workers should always run.
-FeedWorker(feed_queue).start()
+FeedWorker(feed_queue, config).start()
 TimeWorker(feed_queue).start()
 
 # Start the auto discovery worker if requested.

@@ -9,7 +9,9 @@ name = "pypi"
 
 peewee = "*"
 flask = "*"
+gpiozero = "*"
 
 
 [dev-packages]
 
+pigpio = "*"

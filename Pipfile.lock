@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "85e2d30249192bcd37eb33f8f37d9252956f93b787768d2b6282daba1230d29d"
+            "sha256": "6df3e7287904d3760153f5dbaed35978d286123ea5c99478f493ebead8ed795d"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -41,6 +41,13 @@
             ],
             "version": "==0.12.2"
         },
+        "gpiozero": {
+            "hashes": [
+                "sha256:c0fe28462653ad178a4c64a0766e035d0e46d6c1d234e659c4d61e630ca85879",
+                "sha256:79d8f6da1ee7aa92d7d0dc27a53e1bc7ac312fe9efbff03e5dcf30dc99b828a8"
+            ],
+            "version": "==1.4.0"
+        },
         "itsdangerous": {
             "hashes": [
                 "sha256:cbb3fcf8d3e33df861709ecaf89d9e6629cff0a217bc2848f1b41cd30d360519"
@@ -74,5 +81,13 @@
             "version": "==0.12.2"
         }
     },
-    "develop": {}
+    "develop": {
+        "pigpio": {
+            "hashes": [
+                "sha256:040e8f85cb2a07c8e43938d44827bd579f0826917e5ff17368dc6fb7f91c072a",
+                "sha256:336edcc9d04e47b91fd6930f53635593bb4bfd2edf3e26ee9bd26316de575b12"
+            ],
+            "version": "==1.38"
+        }
+    }
 }
