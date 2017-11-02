@@ -99,12 +99,13 @@ if strtobool(config["general"]["discovery_enabled"]) == 1:
 
 # Shutdown handling when we receive SIGINT, end all the threads gracefully.
 def sigint_signal(signal, frame):
-    print("Shutting down.")
+    print("Received shutdown signal. Shutting down.")
     for thread in thread_pool:
         thread.end()
 
 # Trap the SIGINT signal.
 signal.signal(signal.SIGINT, sigint_signal)
+signal.signal(signal.SIGTERM, sigint_signal)
 
 # Join all the threads.
 for thread in thread_pool:
