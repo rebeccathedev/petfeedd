@@ -118,7 +118,7 @@ class WebWorker(threading.Thread):
     # This function updates settings.
     def post_settings(self):
         print(request.get_json())
-        return get_settings()
+        return self.get_settings()
 
     # This function gets all feeds.
     def get_feeds(self):
@@ -132,7 +132,7 @@ class WebWorker(threading.Thread):
     def post_feeds(self):
         data = request.get_json(force=True)
         Feed.create(time=data["time"], name=data["name"], size=data["size"], last_feed=data["last_feed"], feed_count=data["feed_count"])
-        return get_feeds()
+        return self.get_feeds()
 
     # This function gets a specific feed.
     def get_feed(self, feed_id):
@@ -162,4 +162,4 @@ class WebWorker(threading.Thread):
         if feed:
             feed.delete_instance()
 
-        return get_feeds()
+        return self.get_feeds()
