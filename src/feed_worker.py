@@ -29,8 +29,8 @@ class FeedWorker(Worker):
                 pass
 
     def feed(self, feed_size):
-        feed_size_time = float(self.config["gpio"]["servo_feed_time"] * feed_size)
-        servo = Servo(self.config["gpio"]["servo_pin"])
+        feed_size_time = float(self.config["gpio"]["servo_feed_time"]) * float(feed_size)
+        servo = Servo(int(self.config["gpio"]["servo_pin"]))
         servo.max()
         time.sleep(feed_size_time)
         servo.detach()
