@@ -56,7 +56,6 @@ class WebWorker(Worker):
         # API and Vue.js.
         @self.app.route('/')
         def index():
-            print(request.environ)
             return render_template('index.html')
 
         @self.app.route('/api/events', methods=['GET'])
