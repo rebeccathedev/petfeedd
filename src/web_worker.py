@@ -101,7 +101,7 @@ class WebWorker(Worker):
         @self.app.route('/api/shutdown')
         def shutdown():
             # Only process this if it originated from us.
-            if request.environ["REMOTE_ADDR"] == self.config["web"]["bind_address"]:
+            if request.environ["REMOTE_ADDR"] == "127.0.0.1":
                 print("Stopping web worker.")
                 func = request.environ.get('werkzeug.server.shutdown')
                 func()
