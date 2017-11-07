@@ -15,10 +15,11 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 from distutils.util import strtobool
 
 # Import all the worker threads.
-from feed_worker import FeedWorker
 from time_worker import TimeWorker
 from discovery_worker import DiscoveryWorker
 from web_worker import WebWorker
+from notification_worker import NotificationWorker
+from feed_worker import FeedWorker
 
 # Import all the models.
 from models.Setting import Setting
@@ -79,8 +80,10 @@ db = SqliteExtDatabase(config["general"]["database"])
 db.connect()
 db.create_tables([Setting, Feed, FeedEvent], safe=True)
 
-# Create a sharted feeding queue that will be used by several workers.
+# Create a sharted feeding queue that will be used by several workers. Create
+# a notification queue for sending status notifications
 feed_queue = queue.Queue()
+notification_queue = queue.Queue()
 
 # Holds our thread pool.
 thread_pool = []
@@ -90,8 +93,9 @@ if strtobool(config["web"]["web_enabled"]) == 1:
     thread_pool.append(WebWorker(feed_queue, config).begin())
 
 # Start the workers. These workers should always run.
-thread_pool.append(FeedWorker(feed_queue, config).begin())
 thread_pool.append(TimeWorker(feed_queue).begin())
+thread_pool.append(NotificationWorker(notification_queue, config).begin())
+thread_pool.append(FeedWorker(feed_queue, config, notification_queue).begin())
 
 # Start the auto discovery worker if requested.
 if strtobool(config["general"]["discovery_enabled"]) == 1:

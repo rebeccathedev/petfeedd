@@ -10,6 +10,8 @@ name = "pypi"
 peewee = "*"
 flask = "*"
 gpiozero = "*"
+emails = "*"
+"pushbullet.py" = "*"
 
 
 [dev-packages]

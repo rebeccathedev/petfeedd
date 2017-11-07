@@ -6,3 +6,23 @@ database=petfeedd.db
 web_enabled=1
 bind_address=127.0.0.1
 bind_port=8080
+
+[gpio]
+servo_pin=17
+sevo_feed_time=0.26
+
+[email_notifications]
+enabled=1
+from=petfeedd
+from_address=petfeedd@example.com
+subject=Feed Event
+to=you@example.com
+server=example.com
+port=25
+username=you@example.com
+password=password
+
+[pushbullet_notifications]
+enabled=1
+subject=Feed Event
+api_key=api.key
