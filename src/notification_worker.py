@@ -1,6 +1,7 @@
 import queue
 import smtplib
 import emails
+import twitter
 
 from worker import Worker
 from pushbullet import Pushbullet
@@ -26,6 +27,7 @@ class NotificationWorker(Worker):
                     print("Found a notification event.")
                     self.send_email(notification_event.text)
                     self.send_pushbullet(notification_event.text)
+                    self.send_twitter(notification_event.text)
 
                 self.notification_queue.task_done()
             except queue.Empty:
@@ -57,3 +59,15 @@ class NotificationWorker(Worker):
 
         pb = Pushbullet(self.config["pushbullet_notifications"]["api_key"])
         push = pb.push_note(self.config["pushbullet_notifications"]["subject"], message)
+
+    def send_twitter(self, message):
+
+        if strtobool(self.config["twitter_notifications"]["enabled"]) == 0:
+            return
+
+        api = twitter.Api(consumer_key=self.config["twitter_notifications"]["consumer_key"],
+                  consumer_secret=self.config["twitter_notifications"]["consumer_secret"],
+                  access_token_key=self.config["twitter_notifications"]["access_key"],
+                  access_token_secret=self.config["twitter_notifications"]["access_secret"])
+
+        status = api.PostUpdate(message)

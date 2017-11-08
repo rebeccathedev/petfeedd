@@ -1,6 +1,7 @@
 import os
 import time
 import queue
+import datetime
 
 from worker import Worker
 from events.Notification import Notification
@@ -48,7 +49,10 @@ class FeedWorker(Worker):
                     self.feed(feed_event.size)
 
                     note = Notification()
-                    note.text = "test"
+                    note.text = self.config["general"]["name"] + " dispensed " + \
+                        str(feed_event.size) + " feeds at " + \
+                        datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
+
                     self.notification_queue.put(note)
 
                 self.feed_queue.task_done()
