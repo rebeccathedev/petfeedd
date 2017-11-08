@@ -12,6 +12,7 @@ flask = "*"
 gpiozero = "*"
 emails = "*"
 "pushbullet.py" = "*"
+python-twitter = "*"
 
 
 [dev-packages]

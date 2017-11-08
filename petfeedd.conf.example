@@ -1,6 +1,7 @@
 [general]
 discovery_enabled=1
 database=petfeedd.db
+name=Living Room Feeder
 
 [web]
 web_enabled=1
@@ -26,3 +27,10 @@ password=password
 enabled=1
 subject=Feed Event
 api_key=api.key
+
+[twitter_notifications]
+enabled=0
+consumer_key=
+consumer_secret=
+access_key=
+access_secret=
