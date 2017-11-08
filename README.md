@@ -19,7 +19,7 @@ of feeds of an arbitrary size.
 * An auto-discovery protocol that can be used to find feeders on your network.
 Useful for writing third party clients.
 
-* A notification system that supports email and PushBullet.
+* A notification system that supports email, PushBullet and Twitter.
 
 petfeedd is implemented predominantly in Python 3 using Flask and Peewee, with
 Vue.js and Bootstrap used for the web interface.
