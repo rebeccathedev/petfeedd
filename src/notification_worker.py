@@ -70,4 +70,8 @@ class NotificationWorker(Worker):
                   access_token_key=self.config["twitter_notifications"]["access_key"],
                   access_token_secret=self.config["twitter_notifications"]["access_secret"])
 
-        status = api.PostUpdate(message)
+        try:
+            status = api.PostUpdate(message)
+        except twitter.error.TwitterError as err:
+            for i in err.message:
+                print(i)
