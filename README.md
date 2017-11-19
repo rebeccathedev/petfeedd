@@ -117,6 +117,24 @@ POST /api/feed
 
 Will trigger an on-demand feed.
 
+```
+POST /api/pause
+```
+
+Pauses all feeding activity.
+
+```
+POST /api/start
+```
+
+Resumes feeding activity after a pause.
+
+```
+GET /api/status
+```
+
+Returns some information about the feeder.
+
 ## Auto Discovery
 
 petfeedd implements a simple auto-discovery mechanism to allow you to find

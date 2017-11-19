@@ -26,6 +26,8 @@ from models.Setting import Setting
 from models.Feed import Feed
 from models.FeedEvent import FeedEvent
 
+import petfeedd
+
 # Configure argument parsing and parse arguments.
 parser = argparse.ArgumentParser(description='A daemon that feeds your pets.')
 parser.add_argument('-c', '--config', help='The config file location.')
@@ -84,6 +86,9 @@ db.create_tables([Setting, Feed, FeedEvent], safe=True)
 # a notification queue for sending status notifications
 feed_queue = queue.Queue()
 notification_queue = queue.Queue()
+
+# Our semaphore for feeding and pausing.
+petfeedd.feeding_semaphore = True
 
 # Holds our thread pool.
 thread_pool = []
