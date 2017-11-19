@@ -1,6 +1,7 @@
 import json
 import datetime
 import urllib.request
+import petfeedd
 from time import mktime
 
 from flask import Flask
@@ -96,6 +97,25 @@ class WebWorker(Worker):
             self.feed_queue.put(feed_event)
             return jsonify(True)
 
+        # A route that pauses feeding.
+        @self.app.route('/api/pause', methods=['POST'])
+        def pause():
+            print("Pausing feeding.")
+            petfeedd.feeding_semaphore = False
+            return jsonify(True)
+
+        # A route that starts feeding.
+        @self.app.route('/api/start', methods=['POST'])
+        def start():
+            print("Starting feeding.")
+            petfeedd.feeding_semaphore = True
+            return jsonify(True)
+
+        # A route to get status.
+        @self.app.route('/api/status', methods=['GET'])
+        def status():
+            return self.get_status()
+
         # A special endpoint that shuts down the server
         @self.app.route('/api/shutdown')
         def shutdown():
@@ -180,3 +200,12 @@ class WebWorker(Worker):
             feed.delete_instance()
 
         return self.get_feeds()
+
+    # This function returns the status of the feeder.
+    def get_status(self):
+        settings = {
+            'feeding': petfeedd.feeding_semaphore,
+            'name': self.config["general"]["name"]
+        }
+
+        return json.dumps(settings)

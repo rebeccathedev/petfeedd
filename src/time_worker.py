@@ -2,6 +2,8 @@ import time
 import queue
 import datetime
 
+import petfeedd
+
 from worker import Worker
 from models.Feed import Feed
 from models.FeedEvent import FeedEvent
@@ -19,14 +21,15 @@ class TimeWorker(Worker):
                 print("Stopping time worker.")
                 return
 
-            time_query = time.strftime("%H:%M:%S")
-            for feed in Feed.select().where(Feed.time==time_query):
-                print("Found feed " + feed.name + " at " + time_query)
-                feed_event = FeedEvent.create(size=feed.size, name=feed.name)
-                self.feed_queue.put(feed_event)
+            if petfeedd.feeding_semaphore:
+                time_query = time.strftime("%H:%M:%S")
+                for feed in Feed.select().where(Feed.time==time_query):
+                    print("Found feed " + feed.name + " at " + time_query)
+                    feed_event = FeedEvent.create(size=feed.size, name=feed.name)
+                    self.feed_queue.put(feed_event)
 
-                feed.last_feed = feed_event.date_updated
-                feed.feed_count = feed.feed_count + 1
-                feed.save()
+                    feed.last_feed = feed_event.date_updated
+                    feed.feed_count = feed.feed_count + 1
+                    feed.save()
 
             time.sleep(1)

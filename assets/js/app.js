@@ -16,11 +16,13 @@ var Home = Vue.component('home', {
     template: '#home',
     data: function() {
         return {
-            events: []
+            events: [],
+            status: {}
         }
     },
     created: function() {
         this.fetchData();
+        this.fetchStatus();
     },
     methods: {
         feedNow() {
@@ -28,9 +30,28 @@ var Home = Vue.component('home', {
                 this.fetchData();
             });
         },
+        startOrPause(event) {
+            var feeding = this.status.feeding;
+            if (feeding) {
+                this.$http.post('/api/pause').then(function() {
+                    event.target.innerHTML = "Start";
+                    this.fetchStatus();
+                });
+            } else {
+                this.$http.post('/api/start').then(function() {
+                    event.target.innerHTML = "Pause";
+                    this.fetchStatus();
+                });
+            }
+        },
         fetchData() {
             this.$http.get('/api/events').then(function(response) {
                 this.events = response.body;
+            });
+        },
+        fetchStatus() {
+            this.$http.get('/api/status').then(function(response) {
+                this.status = response.body;
             });
         }
     }
