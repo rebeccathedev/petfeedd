@@ -2,6 +2,7 @@ import json
 import datetime
 import urllib.request
 import petfeedd
+import logging
 from time import mktime
 
 from flask import Flask
@@ -51,7 +52,7 @@ class WebWorker(Worker):
 
     # Run when the thread is started.
     def run(self):
-        print("Starting web worker.")
+        logging.getLogger('petfeedd').info("Starting web worker.")
 
         # The main route returns the index page. Everything else is handled by the
         # API and Vue.js.
@@ -100,14 +101,14 @@ class WebWorker(Worker):
         # A route that pauses feeding.
         @self.app.route('/api/pause', methods=['POST'])
         def pause():
-            print("Pausing feeding.")
+            logging.getLogger('petfeedd').info("Pausing feeding.")
             petfeedd.feeding_semaphore = False
             return jsonify(True)
 
         # A route that starts feeding.
         @self.app.route('/api/start', methods=['POST'])
         def start():
-            print("Starting feeding.")
+            logging.getLogger('petfeedd').info("Starting feeding.")
             petfeedd.feeding_semaphore = True
             return jsonify(True)
 
@@ -121,7 +122,7 @@ class WebWorker(Worker):
         def shutdown():
             # Only process this if it originated from us.
             if request.environ["REMOTE_ADDR"] == "127.0.0.1":
-                print("Stopping web worker.")
+                logging.getLogger('petfeedd').info("Stopping web worker.")
                 func = request.environ.get('werkzeug.server.shutdown')
                 func()
 
@@ -154,7 +155,6 @@ class WebWorker(Worker):
 
     # This function updates settings.
     def post_settings(self):
-        print(request.get_json())
         return self.get_settings()
 
     # This function gets all feeds.

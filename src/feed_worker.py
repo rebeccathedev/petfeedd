@@ -2,6 +2,7 @@ import os
 import time
 import queue
 import datetime
+import logging
 
 from worker import Worker
 from events.Notification import Notification
@@ -19,7 +20,7 @@ else:
         is_gpio_capable = True
 
 if not is_gpio_capable:
-    print("This is not a Raspberry Pi and PIGPIO_ADDR for remote GPIO has not \
+    logging.getLogger('petfeedd').warning("This is not a Raspberry Pi and PIGPIO_ADDR for remote GPIO has not \
 been defined. Disabling GPIO.")
 
 # If this device is not GPIO capable, we need to just disable it all. We'll
@@ -35,17 +36,17 @@ class FeedWorker(Worker):
         super().__init__(*args, **kwargs)
 
     def run(self):
-        print("Starting feed worker.")
+        logging.getLogger('petfeedd').info("Starting feed worker.")
 
         while True:
             if self.stopped():
-                print("Stopping feed worker.")
+                logging.getLogger('petfeedd').info("Stopping feed worker.")
                 return
 
             try:
                 feed_event = self.feed_queue.get(timeout=1)
                 if feed_event:
-                    print("Found a feed event. Dispensing " + str(feed_event.size) + " feeds.")
+                    logging.getLogger('petfeedd').info("Found a feed event. Dispensing " + str(feed_event.size) + " feeds.")
                     self.feed(feed_event.size)
 
                     note = Notification()
@@ -61,7 +62,7 @@ class FeedWorker(Worker):
 
     def feed(self, feed_size):
         if not is_gpio_capable:
-            print("This device is not GPIO capable. Simulating a feed.")
+            logging.getLogger('petfeedd').info("This device is not GPIO capable. Simulating a feed.")
             return
 
         feed_size_time = float(self.config["gpio"]["servo_feed_time"]) * float(feed_size)

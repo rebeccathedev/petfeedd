@@ -1,5 +1,6 @@
 # Imports from the standard library.
 import threading
+import logging
 import configparser
 import argparse
 import signal
@@ -35,6 +36,11 @@ args = parser.parse_args()
 
 # Define a default configuration.
 config = configparser.ConfigParser()
+config["logging"] = {
+    "logging_enabled": 1,
+    "logging_method": "stdout",
+}
+
 config["general"] = {
     "discovery_enabled": 1,
     "database": "petfeedd.db"
@@ -77,6 +83,26 @@ else:
 if not config_loaded:
     print("No config file specified. Proceeding with defaults.")
 
+# Setup logging)
+logger = logging.getLogger('petfeedd')
+logger.setLevel(logging.DEBUG)
+if strtobool(config["logging"]["enabled"]) == 0:
+    logger.addHandler(logging.NullHandler())
+else:
+    handler = logging.NullHandler()
+    formatter = logging.Formatter('petfeedd %(asctime)s (%(levelname)s): %(message)s')
+
+    if config["logging"]["method"] == "stdout":
+        handler = logging.StreamHandler(sys.stdout)
+    elif config["logging"]["method"] == "syslog":
+        handler = logging.handlers.SysLogHandler(address=config["logging"]["address"])
+    elif config["logging"]["method"] == "file":
+        handler = logging.FileHandler(config["logging"]["file"])
+
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.info("Logging enabled.")
+
 # Make a DB connection and create the tables if they need to be created.
 db = SqliteExtDatabase(config["general"]["database"])
 db.connect()
@@ -109,6 +135,7 @@ if strtobool(config["general"]["discovery_enabled"]) == 1:
 # Shutdown handling when we receive SIGINT, end all the threads gracefully.
 def sigint_signal(signal, frame):
     print("Received shutdown signal. Shutting down.")
+    logging.shutdown()
     for thread in thread_pool:
         thread.end()
 

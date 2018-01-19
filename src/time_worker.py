@@ -1,6 +1,7 @@
 import time
 import queue
 import datetime
+import logging
 
 import petfeedd
 
@@ -14,17 +15,17 @@ class TimeWorker(Worker):
         super().__init__(*args, **kwargs)
 
     def run(self):
-        print("Starting time worker.")
+        logging.getLogger('petfeedd').info("Starting time worker.")
 
         while True:
             if self.stopped():
-                print("Stopping time worker.")
+                logging.getLogger('petfeedd').info("Stopping time worker.")
                 return
 
             if petfeedd.feeding_semaphore:
                 time_query = time.strftime("%H:%M:%S")
                 for feed in Feed.select().where(Feed.time==time_query):
-                    print("Found feed " + feed.name + " at " + time_query)
+                    logging.getLogger('petfeedd').info("Found feed " + feed.name + " at " + time_query)
                     feed_event = FeedEvent.create(size=feed.size, name=feed.name)
                     self.feed_queue.put(feed_event)
 
