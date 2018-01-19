@@ -2,6 +2,7 @@ import queue
 import smtplib
 import emails
 import twitter
+import logging
 
 from worker import Worker
 from pushbullet import Pushbullet
@@ -14,17 +15,17 @@ class NotificationWorker(Worker):
         super().__init__(*args, **kwargs)
 
     def run(self):
-        print("Starting notification worker.")
+        logging.getLogger('petfeedd').info("Starting notification worker.")
 
         while True:
             if self.stopped():
-                print("Stopping notification worker.")
+                logging.getLogger('petfeedd').info("Stopping notification worker.")
                 return
 
             try:
                 notification_event = self.notification_queue.get(timeout=1)
                 if notification_event:
-                    print("Found a notification event.")
+                    logging.getLogger('petfeedd').info("Found a notification event.")
                     self.send_email(notification_event.text)
                     self.send_pushbullet(notification_event.text)
                     self.send_twitter(notification_event.text)
@@ -74,4 +75,4 @@ class NotificationWorker(Worker):
             status = api.PostUpdate(message)
         except twitter.error.TwitterError as err:
             for i in err.message:
-                print(i)
+                logging.getLogger('petfeedd').error(i)

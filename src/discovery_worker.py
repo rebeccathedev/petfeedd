@@ -1,4 +1,5 @@
 import socket
+import logging
 
 from worker import Worker
 
@@ -14,7 +15,7 @@ class DiscoveryWorker(Worker):
 
     # Main run method.
     def run(self):
-        print("Starting auto discovery worker.")
+        logging.getLogger('petfeedd').info("Starting auto discovery worker.")
 
         # Create a socket with a 1 second timeout and bind it to the correct
         # port.
@@ -37,12 +38,12 @@ class DiscoveryWorker(Worker):
 
             # If we got data, reply with information about us.
             if data:
-                print("Discovery request received from " + address[0])
+                logging.getLogger('petfeedd').info("Discovery request received from " + address[0])
                 info_string = "petfeedd\nHEAD\n" + self.config["web"]["bind_port"]
                 sent = self.sock.sendto(info_string.encode(), address)
 
     # Causes the socket to close and the thread to gracefully end.
     def end(self):
-        print("Stopping auto discovery worker.")
+        logging.getLogger('petfeedd').info("Stopping auto discovery worker.")
         self.sock.close()
         return super(DiscoveryWorker, self).end()
