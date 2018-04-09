@@ -1,0 +1,13 @@
+[Unit]
+Description=petfeedd
+After=network.target
+
+[Service]
+User=root
+Restart=always
+Type=simple
+WorkingDirectory=/opt/petfeedd
+ExecStart=/usr/local/bin/pipenv run python3 /opt/petfeedd/src/__main__.py
+
+[Install]
+WantedBy=multi-user.target
