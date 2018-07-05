@@ -47,7 +47,7 @@ Configure to your liking.
 
 4. `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs`
 
-5. `npn install -g gulp`
+5. `npm install -g gulp`
 
 ### Build the Source
 
