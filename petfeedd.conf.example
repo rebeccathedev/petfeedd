@@ -19,7 +19,7 @@ bind_port=8080
 
 [gpio]
 servo_pin=17
-sevo_feed_time=0.26
+servo_feed_time=0.26
 
 [email_notifications]
 enabled=1
