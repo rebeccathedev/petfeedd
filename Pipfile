@@ -7,14 +7,14 @@ name = "pypi"
 
 [packages]
 
-peewee = "*"
-flask = "*"
-gpiozero = "*"
-emails = "*"
-"pushbullet.py" = "*"
-python-twitter = "*"
+peewee = "==2.10.2"
+flask = "==0.12.2"
+gpiozero = "==1.4.0"
+emails = "==0.5.15"
+"pushbullet.py" = "==0.11.0"
+python-twitter = "==3.4.2"
 
 
 [dev-packages]
 
-pigpio = "*"
+pigpio = "==1.42"
