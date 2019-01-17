@@ -42,15 +42,39 @@ config["logging"] = {
 }
 
 config["general"] = {
-    "discovery_enabled": 1,
-    "database": "petfeedd.db"
+    "database": "petfeedd.db",
+    "name": "petfeedd"
+}
+
+config["discovery"] = {
+    "enabled": 1
 }
 
 config["web"] = {
-    "web_enabled": 1,
-    "bind_address": "127.0.0.1",
+    "enabled": 1,
+    "bind_address": "0.0.0.0",
     "bind_port": 8080
 }
+
+config["gpio"] = {
+    "servo_pin": 17,
+    "servo_feed_time": 0.25
+}
+
+config["logging"] = {
+    "enabled": 1,
+    "method": "stdout"
+}
+
+# Try to read from the environment. We look for variables beginning with
+# "petfeedd_", with the keys mapping to the identical keys in the petfeedd.conf
+# file, with underscores denoting sections.
+for k in os.environ:
+    if k[0:9] == "petfeedd_":
+        keys = k.split('_', 2)
+        keys.pop(0)
+        value = os.environ[k]
+        config[keys[0]][keys[1]] = value
 
 # If we were specified a config file. read that now.
 config_loaded = False
@@ -81,7 +105,7 @@ else:
 
 # If we got here without finding a config file, just roll with it.
 if not config_loaded:
-    print("No config file specified. Proceeding with defaults.")
+    print("No config file specified. Proceeding with defaults and environment.")
 
 # Setup logging)
 logger = logging.getLogger('petfeedd')
@@ -120,7 +144,7 @@ petfeedd.feeding_semaphore = True
 thread_pool = []
 
 # Start the web worker if requested.
-if strtobool(config["web"]["web_enabled"]) == 1:
+if strtobool(config["web"]["enabled"]) == 1:
     thread_pool.append(WebWorker(feed_queue, config).begin())
 
 # Start the workers. These workers should always run.
@@ -129,7 +153,7 @@ thread_pool.append(NotificationWorker(notification_queue, config).begin())
 thread_pool.append(FeedWorker(feed_queue, config, notification_queue).begin())
 
 # Start the auto discovery worker if requested.
-if strtobool(config["general"]["discovery_enabled"]) == 1:
+if strtobool(config["discovery"]["enabled"]) == 1:
     thread_pool.append(DiscoveryWorker(config).begin())
 
 # Shutdown handling when we receive SIGINT, end all the threads gracefully.
