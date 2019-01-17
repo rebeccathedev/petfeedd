@@ -36,40 +36,40 @@ class NotificationWorker(Worker):
 
     def send_email(self, message):
 
-        if strtobool(self.config["email_notifications"]["enabled"]) == 0:
+        if strtobool(self.config["emailnotifications"]["enabled"]) == 0:
             return
 
         smtp = {
-            "host": self.config["email_notifications"]["server"],
-            "port": self.config["email_notifications"]["port"],
-            "user": self.config["email_notifications"]["username"],
-            "password": self.config["email_notifications"]["password"]
+            "host": self.config["emailnotifications"]["server"],
+            "port": self.config["emailnotifications"]["port"],
+            "user": self.config["emailnotifications"]["username"],
+            "password": self.config["emailnotifications"]["password"]
         }
 
         m = emails.Message(text=message,
-                            subject=self.config["email_notifications"]["subject"],
-                            mail_from=(self.config["email_notifications"]["from"], self.config["email_notifications"]["from_address"]))
+                            subject=self.config["emailnotifications"]["subject"],
+                            mail_from=(self.config["emailnotifications"]["from"], self.config["emailnotifications"]["from_address"]))
 
-        response = m.send(to=self.config["email_notifications"]["to"],
+        response = m.send(to=self.config["emailnotifications"]["to"],
                             smtp=smtp);
 
     def send_pushbullet(self, message):
 
-        if strtobool(self.config["pushbullet_notifications"]["enabled"]) == 0:
+        if strtobool(self.config["pushbulletnotifications"]["enabled"]) == 0:
             return
 
-        pb = Pushbullet(self.config["pushbullet_notifications"]["api_key"])
-        push = pb.push_note(self.config["pushbullet_notifications"]["subject"], message)
+        pb = Pushbullet(self.config["pushbulletnotifications"]["api_key"])
+        push = pb.push_note(self.config["pushbulletnotifications"]["subject"], message)
 
     def send_twitter(self, message):
 
-        if strtobool(self.config["twitter_notifications"]["enabled"]) == 0:
+        if strtobool(self.config["twitternotifications"]["enabled"]) == 0:
             return
 
-        api = twitter.Api(consumer_key=self.config["twitter_notifications"]["consumer_key"],
-                  consumer_secret=self.config["twitter_notifications"]["consumer_secret"],
-                  access_token_key=self.config["twitter_notifications"]["access_key"],
-                  access_token_secret=self.config["twitter_notifications"]["access_secret"])
+        api = twitter.Api(consumer_key=self.config["twitternotifications"]["consumer_key"],
+                  consumer_secret=self.config["twitternotifications"]["consumer_secret"],
+                  access_token_key=self.config["twitternotifications"]["access_key"],
+                  access_token_secret=self.config["twitternotifications"]["access_secret"])
 
         try:
             status = api.PostUpdate(message)
