@@ -9,14 +9,21 @@
   "author": "Rob Peck <rob@robpeck.com>",
   "license": "GPLv3",
   "dependencies": {
-    "bootstrap-sass": "^3.3.7",
-    "jquery": "^3.2.1",
-    "vue": "^2.5.2",
-    "vue-resource": "^1.3.4",
-    "vue-router": "^3.0.1"
+    "bootstrap-sass": "^3.4.0",
+    "jquery": "^3.3.1",
+    "vue": "^2.5.22",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.0.2"
   },
   "devDependencies": {
+    "glob": "^7.1.3",
     "gulp": "^3.9.1",
-    "gulp-sass": "^3.1.0"
+    "gulp-exec": "^3.0.2",
+    "gulp-sass": "^3.2.1",
+    "gulp-shell": "^0.6.5",
+    "yargs": "^12.0.5"
+  },
+  "resolutions": {
+    "natives": "1.1.3"
   }
 }

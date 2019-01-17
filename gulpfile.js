@@ -2,6 +2,9 @@
 
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var exec = require('child_process').execSync;
+var glob = require("glob")
+var argv = require('yargs').argv;
 
 var jsPackages = {
     "jquery": "./node_modules/jquery/dist/jquery.min.js",
@@ -16,9 +19,9 @@ gulp.task('scss', function () {
         .pipe(sass({
             style: 'compressed',
             includePaths: [
-                 './assets/scss',
-                 './node_modules/bootstrap-sass/assets/stylesheets',
-             ]
+                 './assets/scss',
+                 './node_modules/bootstrap-sass/assets/stylesheets',
+            ]
         })
         .on('error', sass.logError))
         .pipe(gulp.dest('./src/static/styles'));
@@ -46,6 +49,43 @@ gulp.task('scss:watch', function () {
 
 gulp.task('js:watch', function() {
     gulp.watch('./assets/js/**/*.js', ['js']);
+});
+
+gulp.task('build:clean', function() {
+    exec('find ./build -maxdepth 1 -not -name ".gitignore" -not -name "build" -exec rm -rf {} \\;');
+});
+
+gulp.task('build', ['build:clean'], function() {
+    glob("./Dockerfile.*", null, function (er, files) {
+        var image = (argv.image  === undefined) ? "peckrob/petfeedd" : argv.image;
+        var tag = (argv.tag  === undefined) ? "latest" : argv.tag;
+
+        var build = [
+            'cp -r src assets node_modules package* gulpfile.js Pipfile* Dockerfile* build/',
+            'cd build && gulp && rm -rf node_modules assets gulpfile.js package*',
+        ];
+
+        for (const id in files) {
+            if (files.hasOwnProperty(id)) {
+                const file = files[id];
+                var matches = file.match(/Dockerfile\.(.*)/);
+
+                if (matches.length == 2) {
+                    build.push('cd build && docker build -f ' + file + ' --tag ' + image + '-' + matches[1] + ':' + tag + ' .');
+                }
+            }
+        }
+
+        for (const elem in build) {
+            if (build.hasOwnProperty(elem)) {
+                const command = build[elem];
+                console.log('Running ' + command);
+                exec(command, {stdio: 'inherit'});
+            }
+        }
+
+        gulp.start('build:clean');
+    });
 });
 
 gulp.task('watch', ['scss:watch', 'js:watch']);
