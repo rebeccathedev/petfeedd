@@ -50,7 +50,7 @@ are complete and ready for immediate use. To install this way:
    on your Raspberry Pi. You may need to log out and back in if you get 
    permission errors.
 
-2. `docker pull peckrob/petfeedd-arm32v7:0.2`. Be patient, it will take a bit.
+2. `docker pull peckrob/petfeedd-arm32v7:0.2.1`. Be patient, it will take a bit.
 
 3. `sudo touch /opt/petfeedd.db && sudo chown pi: /opt/petfeedd.db`
 
@@ -65,6 +65,27 @@ The reason we pass `--privileged` to the container is to allow the container to
 access the host's GPIO pins. The reason that we pass 
 `-v /opt/petfeedd.db:/petfeedd/petfeedd.db` is to store the DB outside the 
 container.
+
+#### Different Architectures
+
+The examples here are indended for the ARM processors on the Raspberry Pi, thus
+the `arm32v7` on the end of the image. I also build `amd64` and `arm32v6` images 
+as well, just replace `arm32v7` with any of the below in every example above.
+
+* `arm32v7` - Raspberry Pi 2/2B/3/3B
+* `arm32v6` - Raspperry Pi/Zero
+* `amd64` - Intel x86
+
+#### A Note on Timezones
+
+Timezones inside the Docker container are independent of timezones on the 
+device. Assuming you have run `sudo raspi-config` and set the timezone properly,
+unless you want to use UTC for your feeders you will need to bring 
+`/etc/localtime` into the container.
+
+```
+$ docker run --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/petfeedd/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd-arm32v7
+```
 
 #### Configuring under Docker using petfeedd.conf
 
@@ -102,18 +123,49 @@ Otherwise, your cats will likely be very angry with you.
 So, a complete example of running petfeedd using Docker would be something like:
 
 ```
-$ docker run -d --restart always --privileged -v /opt/petfeedd.db:/petfeedd/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 -p 0.0.0.0:11211:11211 peckrob/petfeedd-arm32v7
+$ docker run -d --restart always --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/petfeedd/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 -p 0.0.0.0:11211:11211 peckrob/petfeedd-arm32v7
+```
+
+#### Using Docker Compose
+
+Once the command gets that large, you may consider using `docker-compose` for
+better reproducability.
+
+If you haven't already installed `docker-compose` you can do so with:
+
+```
+$ sudo apt update
+$ sudo apt install -y python python-pip
+$ sudo pip install docker-compose
+```
+
+Here is an example `docker-compose.yml` file representing the above command.
+
+```yml
+version: '3'
+services:
+    petfeedd:
+        privileged: true
+        image: peckrob/petfeedd-arm32v7
+        restart: always
+        volumes:
+         - /etc/localtime:/etc/localtime
+         - /opt/petfeedd.db:/petfeedd/petfeedd.db
+         - /etc/petfeedd.conf:/petfeedd/petfeedd.conf
+        ports:
+         - 0.0.0.0:8080:8080
+         - 0.0.0.0:11211:11211
+```
+
+Now you can just run:
+
+```
+$ docker-compose up -d
 ```
 
 #### Updating
 
 Simply `docker pull peckrob/petfeedd-arm32v7` and restart the container.
-
-#### Different Architectures
-
-The examples above are indended for the ARM processors on the Raspberry Pi, thus
-the `arm32v7` on the end of the image. I also build `amd64` images as well, just
-replace `arm32v7` with `amd64` in every example above.
 
 ### Building from Source
 
@@ -251,12 +303,13 @@ we use a build pipeline to do as much work as possible. The build pipeline:
 There is a gulp command to make it easy:
 
 ```
-$ gulp build --image=<your image name> --tag=latest
+$ gulp build --image=<your image name> [--tag=latest] [--arch=<arch>]
 ```
 
-This will build `<your image name>-arm32v7:latest` and 
-`<your image name>-amd64:latest`. Be aware that this will take significant time.
-On my 2018 MacBook Pro it takes about 20 minutes to build the ARM image.
+If you don't pass an `--arch` argument, it will build all architectures. Be 
+aware that this will take considerable time (it takes about 20 minutes to build
+each ARM arch image on my 2018 MacBook Pro). For arch, you can pass any of the
+supported architectures (that have a matching `Dockerfile.<arch>`).
 
 ## Author
 
