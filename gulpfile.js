@@ -59,6 +59,7 @@ gulp.task('build', ['build:clean'], function() {
     glob("./Dockerfile.*", null, function (er, files) {
         var image = (argv.image  === undefined) ? "peckrob/petfeedd" : argv.image;
         var tag = (argv.tag  === undefined) ? "latest" : argv.tag;
+        var arch = (argv.arch  === undefined) ? null : argv.arch;
 
         var build = [
             'cp -r src assets node_modules package* gulpfile.js Pipfile* Dockerfile* build/',
@@ -71,7 +72,9 @@ gulp.task('build', ['build:clean'], function() {
                 var matches = file.match(/Dockerfile\.(.*)/);
 
                 if (matches.length == 2) {
-                    build.push('cd build && docker build -f ' + file + ' --tag ' + image + '-' + matches[1] + ':' + tag + ' .');
+                    if (arch == null || matches[1] == arch) {
+                        build.push('cd build && docker build -f ' + file + ' --tag ' + image + '-' + matches[1] + ':' + tag + ' .');
+                    }
                 }
             }
         }
