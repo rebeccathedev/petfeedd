@@ -1,5 +1,13 @@
 # petfeedd Changelog
 
+## Version 0.2.1
+
+### New Features
+
+* Docker support for `arm32v6` was added.
+* Documentation was updated with information about timezones.
+* Documentation was updated with a `docker-compose` example.
+
 ## Version 0.2
 
 ### Breaking Changes
