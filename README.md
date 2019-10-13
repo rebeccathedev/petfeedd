@@ -34,6 +34,15 @@ safely behind your firewall.
 If you're truly paranoid, after configuring it you can disable the web interface
 and auto discovery system. Then it'll just run as usual.
 
+## Supported Hardware
+
+petfeedd is reported to be working without modification on:
+
+* Raspberry Pi Zero
+* Raspberry Pi 3
+* Raspberry Pi 3B v1.2
+* Raspberry Pi 3B+
+
 ## Installation
 
 No matter which installation path you choose, the first step is to install 
