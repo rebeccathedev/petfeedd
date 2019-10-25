@@ -59,7 +59,7 @@ are complete and ready for immediate use. To install this way:
    on your Raspberry Pi. You may need to log out and back in if you get 
    permission errors.
 
-2. `docker pull peckrob/petfeedd-arm32v7:0.2.1`. Be patient, it will take a bit.
+2. `docker pull peckrob/petfeedd-arm32v7:latest`. Be patient, it will take a bit.
 
 3. `sudo touch /opt/petfeedd.db && sudo chown pi: /opt/petfeedd.db`
 
