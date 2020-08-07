@@ -1,8 +1,11 @@
 const commandLineArgs = require("command-line-args");
 const fs = require("fs");
 const ini = require("ini");
-const Sequelize = require("sequelize");
-const { settings } = require("cluster");
+
+const Database = require("./database");
+const Web = require("./web");
+
+console.log("petfeedd is starting up. :)");
 
 // Define a default config.
 var config = {
@@ -87,30 +90,8 @@ if (!config_loaded) {
   );
 }
 
-// Initalize ORM.
-var sequelize = new Sequelize("petfeedd", null, null, {
-  host: "localhost",
-  dialect: "sqlite",
+let database = new Database(config.general.database);
+database.runMigrations();
 
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000,
-  },
-
-  // SQLite only
-  storage: config.general.database,
-});
-
-// Load ORM objects.
-let Feed = require("./Models/Feed")(sequelize);
-let FeedEvent = require("./Models/FeedEvent")(sequelize);
-let Setting = require("./Models/Setting")(sequelize);
-let Servo = require("./Models/Servo")(sequelize);
-
-// Calling sync creates/updates tables.
-Feed.sync();
-FeedEvent.sync();
-Setting.sync();
-Servo.sync();
-
+let web = new Web(database);
+web.listen();
