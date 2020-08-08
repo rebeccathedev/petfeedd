@@ -6,7 +6,7 @@ module.exports = function(sequelize) {
   Servo.init({
     name: Sequelize.STRING,
     pin: Sequelize.INTEGER,
-    size: {
+    feed_time: {
       type: Sequelize.DOUBLE,
       defaultValue: 0
     }

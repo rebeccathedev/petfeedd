@@ -9,6 +9,7 @@
   "author": "Rob Peck <rob@robpeck.com>",
   "license": "GPLv3",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "bootstrap-sass": "^3.4.0",
     "command-line-args": "^5.1.1",
     "express": "^4.17.1",
