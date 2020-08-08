@@ -5,7 +5,7 @@ module.exports = function (sequelize) {
 
   Feed.init({
     time: Sequelize.TIME,
-    servoId: Sequelize.INTEGER,
+    servo_id: Sequelize.INTEGER,
     name: Sequelize.STRING,
     size: {
       type: Sequelize.INTEGER,
