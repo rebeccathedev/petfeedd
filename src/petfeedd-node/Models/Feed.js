@@ -1,7 +1,9 @@
-const Sequelize = require("sequelize");
+const { Sequelize, Model } = require("sequelize");
 
-module.exports = function(sequelize) {
-  return sequelize.define('feed', {
+module.exports = function (sequelize) {
+  class Feed extends Model {}
+
+  Feed.init({
     time: Sequelize.TIME,
     servoId: Sequelize.INTEGER,
     name: Sequelize.STRING,
@@ -11,5 +13,13 @@ module.exports = function(sequelize) {
     },
     feed_count: Sequelize.BIGINT,
     last_feed: Sequelize.DATE
+  }, {
+    sequelize,
+    modelName: "feed",
+    tableName: "feed",
+    updatedAt: "date_updated",
+    createdAt: "date_created"
   });
+
+  return Feed;
 }
