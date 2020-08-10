@@ -12,7 +12,8 @@ module.exports = function (sequelize) {
       defaultValue: 0
     },
     feed_count: Sequelize.BIGINT,
-    last_feed: Sequelize.DATE
+    last_feed: Sequelize.DATE,
+    next_feed: Sequelize.DATE,
   }, {
     sequelize,
     modelName: "feed",
