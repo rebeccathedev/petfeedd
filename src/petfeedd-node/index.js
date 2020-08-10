@@ -4,6 +4,7 @@ const ini = require("ini");
 
 const Database = require("./database");
 const Web = require("./web");
+const Scheduler = require("./scheduler");
 
 console.log("petfeedd is starting up. :)");
 
@@ -91,7 +92,15 @@ if (!config_loaded) {
 }
 
 let database = new Database(config.general.database);
-database.runMigrations();
+(async () => {
+  await database.runMigrations();
+})();
+
+let migrations = require("./MigrationScripts");
+console.log(migrations.run(config, database));
 
 let web = new Web(database);
 web.listen();
+
+let scheduler = new Scheduler(database);
+scheduler.run();
