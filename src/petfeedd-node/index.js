@@ -5,6 +5,7 @@ const ini = require("ini");
 const Database = require("./database");
 const Web = require("./web");
 const Scheduler = require("./scheduler");
+const Feeder = require("./feeder");
 
 console.log("petfeedd is starting up. :)");
 
@@ -101,6 +102,9 @@ console.log(migrations.run(config, database));
 
 let web = new Web(database);
 web.listen();
+
+let feeder = new Feeder(database);
+feeder.start();
 
 let scheduler = new Scheduler(database);
 scheduler.run();
