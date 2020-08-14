@@ -1,5 +1,6 @@
 const moment = require('moment');
 const schedule = require('node-schedule');
+const bus = require('./event-bus');
 
 class Scheduler {
   constructor(database) {
@@ -45,23 +46,22 @@ class Scheduler {
   }
 
   async feed(feed, job) {
+    let Servo = this.database.modelFactory("Servo");
+    let servo = await Servo.findByPk(feed.servo_id);
+
     // do the feed!
     console.log("Running a feed.");
+    bus.emit('feed', {
+      pin: servo.pin,
+      time: servo.feed_time * feed.size
+    });
 
     let nextFeed = moment(feed.next_feed).add(1, "days");
-    feed.last_feed = new Date();
     feed.next_feed = nextFeed;
-    feed.feed_count++;
     feed.save();
 
     this.jobs = this.jobs.filter(job => !job);
     this.schedule(feed);
-
-    let FeedEvent = this.database.modelFactory("FeedEvent");
-    (FeedEvent.create({
-      name: feed.name,
-      size: feed.size
-    })).save();
   }
 }
 

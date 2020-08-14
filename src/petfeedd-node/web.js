@@ -1,5 +1,6 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const bus = require("./event-bus");
 
 class Web {
   constructor(database) {
@@ -11,6 +12,7 @@ class Web {
     this.app.post('/api/feeds', (...args) => this.postFeeds(...args));
     this.app.put('/api/feeds/:feedId', (...args) => this.putFeeds(...args));
     this.app.delete('/api/feeds/:feedId', (...args) => this.deleteFeeds(...args));
+    this.app.get("/api/feeds/:feedId/feed", (...args) => this.onDemandFeed(...args));
 
     this.app.get('/api/events', (...args) => this.getEvents(...args));
 
@@ -60,6 +62,21 @@ class Web {
     updateFeed.destroy();
 
     response.send(updateFeed);
+  }
+
+  async onDemandFeed(request, response) {
+    let Feed = this.database.modelFactory("Feed");
+    let Servo = this.database.modelFactory("Servo");
+    var feed = await Feed.findByPk(request.params.feedId);
+    var servo = await Servo.findByPk(feed.servo_id);
+
+    bus.emit("feed", {
+      pin: feed.pin,
+      time: servo.feed_time * feed.size,
+      feed: feed
+    });
+
+    response.send(feed);
   }
 
   async getEvents(request, response) {
