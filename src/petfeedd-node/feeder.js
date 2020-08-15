@@ -22,7 +22,7 @@ class Feeder {
     }
 
     motor.servoWrite(2500);
-    await sleep(feed.time * 1000);
+    await sleep(feedData.feed.time * 1000);
     motor.servoWrite(0);
 
     if (feedData.feed) {
