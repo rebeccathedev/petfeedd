@@ -21,29 +21,27 @@ class Feeder {
       return;
     }
 
-    motor.servoWrite(1000);
+    motor.servoWrite(2500);
+    await sleep(feed.time * 1000);
+    motor.servoWrite(0);
 
-    setInterval(() => {
-      motor.servoWrite(0);
+    if (feedData.feed) {
+      var feed = feedData.feed;
+      feed.feed_count++;
+      feed.last_feed = new Date();
+      feed.save();
 
-      if (feedData.feed) {
-        var feed = feedData.feed;
-        feed.feed_count++;
-        feed.last_feed = new Date();
-        feed.save();
-
-        let FeedEvent = this.database.modelFactory("FeedEvent");
-        var feedName = feed.name;
-        if (feedData.onDemand) {
-          feedName = " (On Demand)";
-        }
-
-        FeedEvent.create({
-          name: feedName,
-          size: feed.size
-        })
+      let FeedEvent = this.database.modelFactory("FeedEvent");
+      var feedName = feed.name;
+      if (feedData.onDemand) {
+        feedName = " (On Demand)";
       }
-    }, feed.time * 1000);
+
+      FeedEvent.create({
+        name: feedName,
+        size: feed.size
+      })
+    }
   }
 }
 
