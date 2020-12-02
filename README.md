@@ -176,6 +176,18 @@ $ docker-compose up -d
 
 Simply `docker pull peckrob/petfeedd-arm32v7` and restart the container.
 
+#### Multiple Servos
+
+If you want to drive more than one servo using petfeedd, you have a few options.
+
+The easiest is to run multiple instances of petfeedd using Docker, each pointed 
+to a different servo. I would be sure to offset each servo by a few seconds to 
+be sure you don’t have any voltage drop issues with the Raspberry Pi.
+
+The other would be to drive the servos using a relay or other control board that
+allows you to drive multiple servos from a single pin. These will usually need a
+separate power supply as well.
+
 ### Building from Source
 
 While the Docker container is the fastest and most foolproof way to get going,
