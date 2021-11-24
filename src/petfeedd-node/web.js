@@ -1,23 +1,46 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require("path");
 const bus = require("./event-bus");
+const scheduler = require("./scheduler");
+const database = require("./database");
 
 class Web {
   constructor(database) {
     this.database = database;
     this.app = express();
-    this.app.use(bodyParser.json())
+    this.app.use(bodyParser.json());
 
-    this.app.get('/api/feeds', (...args) => this.getFeeds(...args));
-    this.app.post('/api/feeds', (...args) => this.postFeeds(...args));
-    this.app.put('/api/feeds/:feedId', (...args) => this.putFeeds(...args));
-    this.app.delete('/api/feeds/:feedId', (...args) => this.deleteFeeds(...args));
-    this.app.get("/api/feeds/:feedId/feed", (...args) => this.onDemandFeed(...args));
+    this.app.use(function(err, req, res, next) {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
 
-    this.app.get('/api/events', (...args) => this.getEvents(...args));
+      res.status(err.statusCode).json({
+        status: false,
+        error: err.message
+      });
+    });
 
-    this.app.get('/api/servos', (...args) => this.getServos(...args));
-    this.app.post('/api/servos', (...args) => this.postServos(...args));
+    this.app.use('/', express.static(path.join(__dirname, 'public')));
+
+    var apiRouter = express.Router();
+    this.app.use('/api', apiRouter);
+
+    apiRouter.get("/feeds", this.wrapper(this.getFeeds));
+    apiRouter.post("/feeds", this.wrapper(this.postFeed));
+    apiRouter.put("/feeds/:feedId", this.wrapper(this.putFeed));
+    //apiRouter.delete("/feeds/:feedId", this.wrapper(this.deleteFeed));
+    apiRouter.delete("/feeds/:feedId", this.wrapper(this.deleteFeed));
+    apiRouter.get("/feeds/:feedId/feed", this.wrapper(this.onDemandFeed));
+
+    apiRouter.get("/events", this.wrapper(this.getEvents));
+
+    apiRouter.get("/servos", this.wrapper(this.getServos));
+    apiRouter.post("/servos", this.wrapper(this.postServos));
+    apiRouter.get("/servos/:servoId", this.wrapper(this.getServo));
+    apiRouter.put("/servos/:servoId", this.wrapper(this.putServo));
+    apiRouter.delete("/servos/:servoId", this.wrapper(this.deleteServo));
   }
 
   listen() {
@@ -26,42 +49,70 @@ class Web {
     });
   }
 
+  wrapper(fn) {
+    return async (request, response, next) => {
+      try {
+        // run controllers logic
+
+        let f = fn.bind(this);
+        await f(request, response);
+      } catch (e) {
+        // if an exception is raised, do not send any response
+        // just continue performing the middleware chain
+        next(e)
+      }
+    }
+  }
+
   async getFeeds(request, response) {
     let Feed = this.database.modelFactory("Feed");
     let feeds = await Feed.findAll();
     response.send(feeds);
   }
 
-  async postFeeds(request, response) {
+  async postFeed(request, response) {
     let Feed = this.database.modelFactory("Feed");
     let newFeed = Feed.create({
       time: request.body.time,
       servo_id: request.body.servo_id,
       name: request.body.name,
-      size: request.body.size
+      size: request.body.size,
+      feed_count: 0
     });
+
+    scheduler.rescheduleAllJobs();
 
     response.send(newFeed);
   }
 
-  async putFeeds(request, response) {
+  async putFeed(request, response) {
     let Feed = this.database.modelFactory("Feed");
     var updateFeed = await Feed.findByPk(request.params.feedId);
+    if (!updateFeed) {
+      return response.status(404).send();
+    }
+
     updateFeed.time = request.body.time;
     updateFeed.servo_id = request.body.servo_id;
     updateFeed.name = request.body.name;
     updateFeed.size = request.body.size;
     updateFeed.save();
 
+    scheduler.rescheduleAllJobs();
+
     response.send(updateFeed);
   }
 
-  async deleteFeeds(request, response) {
+  async deleteFeed(request, response) {
     let Feed = this.database.modelFactory("Feed");
     var updateFeed = await Feed.findByPk(request.params.feedId);
-    updateFeed.destroy();
+    if (!updateFeed) {
+      return response.status(404).send();
+    }
 
-    response.send(updateFeed);
+    updateFeed.destroy();
+    scheduler.rescheduleAllJobs();
+    return response.send(updateFeed);
   }
 
   async onDemandFeed(request, response) {
@@ -73,7 +124,8 @@ class Web {
     bus.emit("feed", {
       pin: feed.pin,
       time: servo.feed_time * feed.size,
-      feed: feed
+      feed: feed,
+      onDemand: true,
     });
 
     response.send(feed);
@@ -96,6 +148,16 @@ class Web {
     const servos = await Servo.findAll();
     response.send(servos);
   }
+
+  async deleteServo(request, response) {
+    let Servo = this.database.modelFactory("Servo");
+    var updateServo = await Servo.findByPk(request.params.servoId);
+    if (updateServo) {
+      updateServo.destroy();
+    }
+
+    response.send(updateServo);
+  }
 }
 
-module.exports = Web;
+module.exports = new Web(database);
