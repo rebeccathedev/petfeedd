@@ -7,6 +7,7 @@ class Feeder {
   }
 
   start() {
+    console.log("Listening for feeds.");
     bus.on('feed', (...args) => this.feed(...args));
   }
 
@@ -45,4 +46,4 @@ class Feeder {
   }
 }
 
-module.exports = Feeder;
+module.exports = new Feeder;

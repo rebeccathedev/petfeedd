@@ -1,24 +1,23 @@
-const {
-  Sequelize,
-  Model
-} = require("sequelize");
+const { Sequelize, Model } = require("sequelize");
+let sequelize = require('../sequelize');
 
-module.exports = function (sequelize) {
-  class FeedEvent extends Model {}
+class FeedEvent extends Model {}
 
-  FeedEvent.init({
+FeedEvent.init(
+  {
     name: Sequelize.STRING,
     size: {
       type: Sequelize.INTEGER,
       defaultValue: 0,
     },
-  }, {
+  },
+  {
     sequelize,
     modelName: "feed_event",
     tableName: "feedevent",
     updatedAt: "date_updated",
-    createdAt: "date_created"
-  });
+    createdAt: "date_created",
+  }
+);
 
-  return FeedEvent;
-};
+module.exports = FeedEvent;

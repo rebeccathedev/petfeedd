@@ -1,106 +1,87 @@
-var glob = require("glob")
+var glob = require("glob");
 
-module.exports = function(grunt) {
-    grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-sass');
-    grunt.loadNpmTasks('grunt-contrib-copy');
+module.exports = function (grunt) {
+  grunt.loadNpmTasks("grunt-shell");
+  grunt.loadNpmTasks("grunt-sass");
+  grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-webpack");
 
-    const config = {
-        tag: grunt.option.tag || 'latest',
-        arch: grunt.option.arch || 'arm32v7',
-        image: grunt.option.image || ('peckrob/petfeedd' + (grunt.option.arch || 'arm32v7'))
+  const config = {
+    tag: grunt.option.tag || "latest",
+    arch: grunt.option.arch || "arm32v7",
+    image:
+      grunt.option.image ||
+      "peckrob/petfeedd" + (grunt.option.arch || "arm32v7"),
+  };
+
+  grunt.initConfig({
+    shell: {
+      clean: {
+        command:
+          'find ./build -maxdepth 1 -not -name ".gitignore" -not -name "build" -exec rm -rf {} \\;',
+      },
+      npm: {
+        command: "cd build && npm ci",
+      },
+      serve: {
+        command: "node build/src/index.js",
+      },
+    },
+    webpack: {
+      vue: require("./webpack.config"),
+    },
+    copy: {
+      base: {
+        files: [
+          {
+            expand: true,
+            flatten: false,
+            cwd: "./src/petfeedd-node/",
+            src: "**",
+            dest: "./build/src",
+          },
+          {
+            expand: true,
+            flatten: false,
+            src: "./*.Dockerfile",
+            dest: "./build",
+          },
+          {
+            expand: true,
+            flatten: false,
+            src: "./package*.json",
+            dest: "./build",
+          },
+        ],
+      },
     }
+  });
 
-    const jsPackages = {
-        "jquery": "./node_modules/jquery/dist/jquery.min.js",
-        "vue": "./node_modules/vue/dist/vue.min.js",
-        "vue-router": "./node_modules/vue-router/dist/vue-router.min.js",
-        "vue-resource": "./node_modules/vue-resource/dist/vue-resource.min.js",
-        "bootstrap-js": "./node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js"
-    }
+  grunt.registerTask("watch", function () {
+    grunt.renameTask("watch", "foo");
+    grunt.loadNpmTasks("grunt-contrib-watch");
 
-    const sassIncludePaths = [
-        './assets/scss',
-        './node_modules/bootstrap-sass/assets/stylesheets',
-    ];
-
-    var copyJsPackages = [];
-    for (const package in jsPackages) {
-        if (jsPackages.hasOwnProperty(package)) {
-            const path = jsPackages[package];
-            copyJsPackages.push({
-                expand: true,
-                src: path,
-                dest: './build/src/static/scripts/',
-                flatten: true
-            });
-        }
-    }
-
-    grunt.initConfig({
-        shell: {
-            clean: {
-                command: 'find ./build -maxdepth 1 -not -name ".gitignore" -not -name "build" -exec rm -rf {} \\;'
-            }
-        },
-
-        sass: {
-            options: {
-                implementation: require('node-sass'),
-                sourceMap: true,
-                sourceComments: false,
-                outputStyle: "compressed",
-                includePaths: sassIncludePaths,
-                precision: 5,
-                linefeed: "lf"
-            },
-            dist: {
-                files: [{
-                    expand: true,
-                    flatten: true,
-                    cwd: './',
-                    src: ['./assets/scss/**/*.scss'],
-                    dest: './build/src/static/styles',
-                    ext: '.min.css'
-                }]
-            }
-        },
-        copy: {
-            base: {
-                files: [
-                    {
-                        expand: true,
-                        flatten: false,
-                        src: './src/*',
-                        dest: './build'
-                    },
-                    {
-                        expand: true,
-                        flatten: false,
-                        src: './*.Dockerfile',
-                        dest: './build'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
-                        src: './assets/js/*',
-                        dest: './build/src/static/scripts/'
-                    }
-                ]
-            },
-            jsPackages: {
-                files: copyJsPackages
-            },
-        }
+    grunt.config.set("watch", {
+      vue: {
+        files: "src/petfeedd-vue/**/*",
+        tasks: "webpack",
+      },
+      node: {
+        files: "src/petfeedd-node/**/*",
+        tasks: "copy:base",
+      }
     });
 
-    grunt.registerTask('build:docker', function() {
-        glob("./*.Dockerfile", null, function (er, files) {
-            
-        });
-    });
+    grunt.task.run("watch");
+  });
 
-    grunt.registerTask('clean', ['shell:clean']);
-    grunt.registerTask('build', ['clean', 'copy:base', 'copy:jsPackages', 'sass', 'build:docker']);
-    grunt.registerTask('default', ['build']);
-}
+  grunt.registerTask("build", ["clean", "copy:base", "webpack", "shell:npm"]);
+  grunt.registerTask("serve", ["shell:serve"]);
+
+  grunt.registerTask("build:docker", function () {
+    glob("./*.Dockerfile", null, function (er, files) {});
+  });
+
+  grunt.registerTask("clean", ["shell:clean"]);
+  grunt.registerTask("default", ["build"]);
+};

@@ -1,22 +1,21 @@
 const { Sequelize, Model } = require("sequelize");
+let sequelize = require('../sequelize');
 
-module.exports = function(sequelize) {
-  class Servo extends Model {}
+class Servo extends Model {}
 
-  Servo.init({
-    name: Sequelize.STRING,
-    pin: Sequelize.INTEGER,
-    feed_time: {
-      type: Sequelize.DOUBLE,
-      defaultValue: 0
-    }
-  }, {
-    sequelize,
-    modelName: "servo",
-    tableName: "servo",
-    updatedAt: "date_updated",
-    createdAt: "date_created"
-  });
+Servo.init({
+  name: Sequelize.STRING,
+  pin: Sequelize.INTEGER,
+  feed_time: {
+    type: Sequelize.DOUBLE,
+    defaultValue: 0
+  }
+}, {
+  sequelize,
+  modelName: "servo",
+  tableName: "servo",
+  updatedAt: "date_updated",
+  createdAt: "date_created"
+});
 
-  return Servo;
-}
+module.exports = Servo;

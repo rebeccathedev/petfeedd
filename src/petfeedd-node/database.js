@@ -1,34 +1,24 @@
 const Sequelize = require("sequelize");
 const Umzug = require("umzug");
 const path = require("path");
+const config = require("./config");
 
 class Database {
   constructor(database) {
     console.log("Initializing database.");
 
     // Initalize ORM.
-    this.sequelize = new Sequelize("petfeedd", null, null, {
-      host: "localhost",
-      dialect: "sqlite",
-
-      pool: {
-        max: 5,
-        min: 0,
-        idle: 10000,
-      },
-
-      storage: database,
-    });
+    this.sequelize = require("./sequelize");
 
     this.models = {
-      "Feed": require("./Models/Feed")(this.sequelize),
-      "FeedEvent": require("./Models/FeedEvent")(this.sequelize),
-      "Setting": require("./Models/Setting")(this.sequelize),
-      "Servo": require("./Models/Servo")(this.sequelize)
+      "Feed": require("./Models/Feed"),
+      "FeedEvent": require("./Models/FeedEvent"),
+      "Setting": require("./Models/Setting"),
+      "Servo": require("./Models/Servo")
     }
   }
 
-  runMigrations() {
+  async runMigrations() {
     // Do any migrations.
     const umzug = new Umzug({
       migrations: {
@@ -41,11 +31,9 @@ class Database {
       },
     });
 
-    (async () => {
       console.log("Running migrations.");
       await umzug.up();
       console.log("All migrations performed successfully");
-    })();
   }
 
   modelFactory(model) {
@@ -53,4 +41,4 @@ class Database {
   }
 }
 
-module.exports = Database
+module.exports = new Database

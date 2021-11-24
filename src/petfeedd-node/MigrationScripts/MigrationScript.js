@@ -5,7 +5,7 @@ class MigrationScript {
   }
 
   migrate() {
-    console.log("Create servo");
+    console.log("Migration script implementation.");
   }
 }
 
