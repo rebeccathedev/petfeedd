@@ -24,8 +24,8 @@
 
       <div class="row">
         <div class="col mt-2 mb-4">
-          <label for="mqtt.feed_event_name" class="form-label">Broadcast Feed Event Name</label>
-          <input type="text" class="form-control" id="mqtt.feed_event_name" placeholder="home/petfeedd/feed" v-model="mqtt.feed_event_name.value">
+          <label for="mqtt.broadcast_event" class="form-label">Broadcast Feed Event Name</label>
+          <input type="text" class="form-control" id="mqtt.broadcast_event" placeholder="home/petfeedd/feed" v-model="mqtt.broadcast_event.value">
         </div>
       </div>
 
@@ -135,7 +135,7 @@ export default {
       mqtt: {
         enable: {},
         server: {},
-        feed_event_name: {}
+        broadcast_event: {}
       },
       mqttEvents: [],
       mqttEventsToDelete: [],
