@@ -64,6 +64,7 @@ class MQTT {
   }
 
   reconfigure() {
+    console.log("Reconfiguring MQTT.");
     this.client.end();
     this.run();
   }
