@@ -1,7 +1,5 @@
-const Sequelize = require("sequelize");
 const Umzug = require("umzug");
 const path = require("path");
-const config = require("./config");
 
 class Database {
   constructor(database) {
@@ -14,7 +12,8 @@ class Database {
       "Feed": require("./Models/Feed"),
       "FeedEvent": require("./Models/FeedEvent"),
       "Setting": require("./Models/Setting"),
-      "Servo": require("./Models/Servo")
+      "Servo": require("./Models/Servo"),
+      "MQTT": require("./Models/MQTT"),
     }
   }
 
@@ -31,9 +30,9 @@ class Database {
       },
     });
 
-      console.log("Running migrations.");
-      await umzug.up();
-      console.log("All migrations performed successfully");
+    console.log("Running migrations.");
+    await umzug.up();
+    console.log("All migrations performed successfully");
   }
 
   modelFactory(model) {

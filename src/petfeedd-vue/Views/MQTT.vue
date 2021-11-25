@@ -1,12 +1,176 @@
 <template>
   <div>
     <h2>MQTT</h2>
+    <div class="row">
+      <div class="col">
+        <div class="form-check my-2">
+          <input class="form-check-input" type="checkbox" value="1" id="mqtt.enable" v-model="mqtt.enable.value">
+          <label class="form-check-label" for="mqtt.enable">
+            Enable MQTT Support
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="mqtt.enable.value">
+      <div class="row">
+        <div class="col mt-2 mb-4">
+          <label for="mqtt.server" class="form-label">MQTT Server</label>
+          <input type="text" class="form-control" id="mqtt.server" placeholder="mqtt://example.com" v-model="mqtt.server.value">
+        </div>
+      </div>
+
+      <h4>MQTT Broadcast Events</h4>
+
+      <div class="row">
+        <div class="col mt-2 mb-4">
+          <label for="mqtt.feed_event_name" class="form-label">Broadcast Feed Event Name</label>
+          <input type="text" class="form-control" id="mqtt.feed_event_name" placeholder="home/petfeedd/feed" v-model="mqtt.feed_event_name.value">
+        </div>
+      </div>
+
+      <h4>MQTT Listen Events</h4>
+      <div class="card mb-2" v-for="(listen, key) in mqttEvents" :key="key">
+        <div class="card-body">
+          <div class="row">
+            <div class="form-group col-md-8">
+              <label for="listen.event">Event</label>
+              <input class="form-control" type="input" name="listen.event" value="1" step="1" v-model="listen.event">
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="listen.servo_id">Servo</label>
+              <select class="form-select" v-model="listen.servo_id">
+                <option v-for="servo in servos" :value="servo.id" :key="servo.id">
+                  {{ servo.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="listen.default_feed_size">Default Feed Size</label>
+              <input class="form-control" type="number" name="listen.default_feed_size" value="1" step="1" v-model="listen.default_feed_size">
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-12">
+              <button class="btn btn-danger" v-on:click='deleteListen(listen)'>Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" @click="addListen()">Add Listen Event</button>
+    </div>
+
+    <div class="mt-4">
+      <button class="btn btn-success" @click="save()">Save</button>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
+import SettingTransformer from "../Mixins/SettingTransformer";
 
+export default {
+  mixins: [SettingTransformer],
+  methods: {
+    addListen() {
+      this.mqttEvents.push({
+        event: "New/Listen/Event",
+        servo_id: 1,
+        default_feed_size: 1
+      });
+    },
+
+    deleteListen(listen) {
+      this.mqttEventsToDelete.push(listen);
+      this.mqttEvents.splice(this.mqttEvents.indexOf(listen), 1);
+    },
+
+    save() {
+      this.mqttEventsToDelete.forEach(async (listen)  => {
+        if (listen.id) {
+          this.$http({
+            url: "/api/mqtt/" + listen.id,
+            method: "DELETE"
+          });
+        }
+      });
+
+      this.mqttEvents.forEach(async (mqtt)  => {
+        if (mqtt.id) {
+          await this.$http({
+            url: "/api/mqtt/" + mqtt.id,
+            method: "PUT",
+            data: mqtt
+          });
+        } else {
+          await this.$http({
+            url: "/api/mqtt",
+            method: "POST",
+            data: mqtt
+          });
+        }
+      });
+
+      for (const i in this.mqtt) {
+        if (Object.hasOwnProperty.call(this.mqtt, i)) {
+          const setting = this.mqtt[i];
+          var sendSetting = Object.assign({}, setting);
+          this.prepareSettings(sendSetting);
+
+          this.$http({
+            url: "/api/settings/" + setting.id,
+            method: "PUT",
+            data: sendSetting
+          });
+        }
+      }
+    }
+  },
+
+  data() {
+    return {
+      mqtt: {
+        enable: {},
+        server: {},
+        feed_event_name: {}
+      },
+      mqttEvents: [],
+      mqttEventsToDelete: [],
+      servos: [],
+    }
+  },
+
+  mounted() {
+    this.$http({
+      url: "/api/settings",
+      method: "GET",
+      params: {
+        namespace: "mqtt"
+      }
+    }).then(response => {
+      response.data.forEach(setting => {
+        this.transformSettings(setting);
+        this.$set(this.mqtt, setting.key, setting);
+      });
+    });
+
+    this.$http({
+      url: "/api/mqtt",
+      method: "GET",
+    }).then(response => {
+      this.mqttEvents = response.data;
+    });
+
+    this.$http({
+      url: "/api/servos",
+      method: "GET"
+    }).then(response => {
+      this.servos = response.data;
+    });
+  }
 }
 </script>
 

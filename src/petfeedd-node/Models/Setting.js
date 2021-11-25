@@ -6,6 +6,8 @@ class Setting extends Model {}
 Setting.init({
   key: Sequelize.STRING,
   value: Sequelize.STRING,
+  namespace: Sequelize.STRING,
+  type: Sequelize.STRING
 }, {
   sequelize,
   modelName: "setting",
