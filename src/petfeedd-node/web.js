@@ -1,9 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const bus = require("./event-bus");
-const scheduler = require("./scheduler");
 const database = require("./database");
+
+const MQTT = require("./Controllers/MQTT");
+const Settings = require("./Controllers/Settings");
+const Servos = require("./Controllers/Servos");
+const Feeds = require("./Controllers/Feeds");
+const FeedEvents = require("./Controllers/FeedEvents");
 
 class Web {
   constructor(database) {
@@ -22,25 +26,40 @@ class Web {
       });
     });
 
+    // This is the main / route that serves the Vue app.
     this.app.use('/', express.static(path.join(__dirname, 'public')));
 
+    // Create a router for our API.
     var apiRouter = express.Router();
     this.app.use('/api', apiRouter);
 
-    apiRouter.get("/feeds", this.wrapper(this.getFeeds));
-    apiRouter.post("/feeds", this.wrapper(this.postFeed));
-    apiRouter.put("/feeds/:feedId", this.wrapper(this.putFeed));
-    //apiRouter.delete("/feeds/:feedId", this.wrapper(this.deleteFeed));
-    apiRouter.delete("/feeds/:feedId", this.wrapper(this.deleteFeed));
-    apiRouter.get("/feeds/:feedId/feed", this.wrapper(this.onDemandFeed));
+    // Build the controllers for each type.
+    this.buildCrud(apiRouter, "events", new FeedEvents(database));
+    this.buildCrud(apiRouter, "feeds", new Feeds(database));
+    this.buildCrud(apiRouter, "servos", new Servos(database));
+    this.buildCrud(apiRouter, "mqtt", new MQTT(database));
+    this.buildCrud(apiRouter, "settings", new Settings(database));
+  }
 
-    apiRouter.get("/events", this.wrapper(this.getEvents));
+  buildCrud(apiRouter, path, controller) {
+    apiRouter.get("/" + path, this.wrapper(controller, "index"));
+    apiRouter.post("/" + path, this.wrapper(controller, "create"));
+    apiRouter.get("/" + path + "/:" + controller.primaryKey,
+      this.wrapper(controller, "get")
+    );
+    apiRouter.put("/" + path + "/:" + controller.primaryKey,
+      this.wrapper(controller, "update")
+    );
+    apiRouter.delete("/" + path + "/:" + controller.primaryKey,
+      this.wrapper(controller, "delete")
+    );
 
-    apiRouter.get("/servos", this.wrapper(this.getServos));
-    apiRouter.post("/servos", this.wrapper(this.postServos));
-    apiRouter.get("/servos/:servoId", this.wrapper(this.getServo));
-    apiRouter.put("/servos/:servoId", this.wrapper(this.putServo));
-    apiRouter.delete("/servos/:servoId", this.wrapper(this.deleteServo));
+    console.log(controller.getAdditionalRoutes());
+
+    controller.getAdditionalRoutes().forEach(route => {
+      console.log("/" + path + route.path);
+      apiRouter[route.method]("/" + path + route.path, this.wrapper(controller, route.callback));
+    });
   }
 
   listen() {
@@ -49,114 +68,15 @@ class Web {
     });
   }
 
-  wrapper(fn) {
+  wrapper(controller, method) {
     return async (request, response, next) => {
       try {
-        // run controllers logic
-
-        let f = fn.bind(this);
-        await f(request, response);
+        await controller[method](request, response);
       } catch (e) {
-        // if an exception is raised, do not send any response
-        // just continue performing the middleware chain
+
         next(e)
       }
     }
-  }
-
-  async getFeeds(request, response) {
-    let Feed = this.database.modelFactory("Feed");
-    let feeds = await Feed.findAll();
-    response.send(feeds);
-  }
-
-  async postFeed(request, response) {
-    let Feed = this.database.modelFactory("Feed");
-    let newFeed = Feed.create({
-      time: request.body.time,
-      servo_id: request.body.servo_id,
-      name: request.body.name,
-      size: request.body.size,
-      feed_count: 0
-    });
-
-    scheduler.rescheduleAllJobs();
-
-    response.send(newFeed);
-  }
-
-  async putFeed(request, response) {
-    let Feed = this.database.modelFactory("Feed");
-    var updateFeed = await Feed.findByPk(request.params.feedId);
-    if (!updateFeed) {
-      return response.status(404).send();
-    }
-
-    updateFeed.time = request.body.time;
-    updateFeed.servo_id = request.body.servo_id;
-    updateFeed.name = request.body.name;
-    updateFeed.size = request.body.size;
-    updateFeed.save();
-
-    scheduler.rescheduleAllJobs();
-
-    response.send(updateFeed);
-  }
-
-  async deleteFeed(request, response) {
-    let Feed = this.database.modelFactory("Feed");
-    var updateFeed = await Feed.findByPk(request.params.feedId);
-    if (!updateFeed) {
-      return response.status(404).send();
-    }
-
-    updateFeed.destroy();
-    scheduler.rescheduleAllJobs();
-    return response.send(updateFeed);
-  }
-
-  async onDemandFeed(request, response) {
-    let Feed = this.database.modelFactory("Feed");
-    let Servo = this.database.modelFactory("Servo");
-    var feed = await Feed.findByPk(request.params.feedId);
-    var servo = await Servo.findByPk(feed.servo_id);
-
-    bus.emit("feed", {
-      pin: feed.pin,
-      time: servo.feed_time * feed.size,
-      feed: feed,
-      onDemand: true,
-    });
-
-    response.send(feed);
-  }
-
-  async getEvents(request, response) {
-    let FeedEvent = this.database.modelFactory("FeedEvent");
-    const events = await FeedEvent.findAll();
-    response.send(events);
-  }
-
-  async getServos(request, response) {
-    let Servo = this.database.modelFactory("Servo");
-    const servos = await Servo.findAll();
-    response.send(servos);
-  }
-
-  async postServos(request, response) {
-    let Servo = this.database.modelFactory("Servo");
-    const servos = await Servo.findAll();
-    response.send(servos);
-  }
-
-  async deleteServo(request, response) {
-    let Servo = this.database.modelFactory("Servo");
-    var updateServo = await Servo.findByPk(request.params.servoId);
-    if (updateServo) {
-      updateServo.destroy();
-    }
-
-    response.send(updateServo);
   }
 }
 

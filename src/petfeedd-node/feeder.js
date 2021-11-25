@@ -3,7 +3,7 @@ const Gpio = require('pigpio').Gpio;
 
 class Feeder {
   constructor(database) {
-    this.database = database;
+    this.database = require("./database");
   }
 
   start() {
@@ -16,33 +16,35 @@ class Feeder {
       let motor = new Gpio(feedData.pin, {
         mode: Gpio.OUTPUT
       });
+
+      motor.servoWrite(2500);
+      await sleep(feedData.time * feedData.size * 1000);
+      motor.servoWrite(0);
+
     } catch (error) {
       console.log("Could not enable GPIO.")
       console.log(error);
-      return;
     }
 
-    motor.servoWrite(2500);
-    await sleep(feedData.feed.time * 1000);
-    motor.servoWrite(0);
-
+    var feedName = feedData.name || "Received";
     if (feedData.feed) {
       var feed = feedData.feed;
       feed.feed_count++;
       feed.last_feed = new Date();
       feed.save();
 
-      let FeedEvent = this.database.modelFactory("FeedEvent");
-      var feedName = feed.name;
-      if (feedData.onDemand) {
-        feedName = " (On Demand)";
-      }
-
-      FeedEvent.create({
-        name: feedName,
-        size: feed.size
-      })
+      feedName = feed.name;
     }
+
+    let FeedEvent = this.database.modelFactory("FeedEvent");
+    if (feedData.onDemand) {
+      feedName += " (On Demand)";
+    }
+
+    FeedEvent.create({
+      name: feedName,
+      size: feedData.size
+    });
   }
 }
 

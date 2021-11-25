@@ -2,6 +2,7 @@ const Database = require("./database");
 const Web = require("./web");
 const Scheduler = require("./scheduler");
 const Feeder = require("./feeder");
+const MQTT = require("./mqtt");
 
 console.log("petfeedd is starting up. :)");
 
@@ -24,4 +25,6 @@ configObj.loadConfig();
 
   // Start the scheduler.
   Scheduler.run();
+
+  MQTT.run();
 })();

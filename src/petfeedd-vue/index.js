@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import VueToast from 'vue-toast-notification';
 import Axios from 'axios';
 
 // Import the base view.
@@ -7,9 +8,11 @@ import App from "./Views/App.vue";
 
 // Import the bootstrap CSS.
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 // Add plugins.
 Vue.use(VueRouter);
+Vue.use(VueToast);
 Vue.prototype.$http = Axios;
 
 // Disable caching on Axios calls.

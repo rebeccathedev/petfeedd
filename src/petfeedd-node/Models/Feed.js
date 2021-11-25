@@ -11,7 +11,10 @@ Feed.init({
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  feed_count: Sequelize.BIGINT,
+  feed_count: {
+    type: Sequelize.BIGINT,
+    defaultValue: 0
+  },
   last_feed: Sequelize.DATE,
 }, {
   sequelize,
