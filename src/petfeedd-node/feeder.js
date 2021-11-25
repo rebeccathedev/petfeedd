@@ -1,5 +1,6 @@
 const bus = require('./event-bus');
 const Gpio = require('pigpio').Gpio;
+const mqtt = require('./mqtt');
 
 class Feeder {
   constructor(database) {
@@ -20,6 +21,8 @@ class Feeder {
       motor.servoWrite(2500);
       await sleep(feedData.time * feedData.size * 1000);
       motor.servoWrite(0);
+
+      mqtt.publish(feedData.size);
 
     } catch (error) {
       console.log("Could not enable GPIO.")

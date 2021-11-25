@@ -1,5 +1,5 @@
-const mqtt = require('mqtt');
-const database = require('./database');
+const mqtt = require("mqtt");
+const database = require("./database");
 const bus = require("./event-bus");
 
 class MQTT {
@@ -10,28 +10,28 @@ class MQTT {
 
     let settings = await Setting.findAll({
       where: {
-        namespace: "mqtt"
-      }
+        namespace: "mqtt",
+      },
     });
 
-    let settingsObj = {};
+    this.settingsObj = {};
 
     for (const i in settings) {
       if (Object.hasOwnProperty.call(settings, i)) {
         const setting = settings[i];
-        settingsObj[setting.key] = setting.value;
+        this.settingsObj[setting.key] = setting.value;
       }
     }
 
-    if (settingsObj.enable && settingsObj.server) {
-      this.client = mqtt.connect(settingsObj.server);
+    if (this.settingsObj.enable && this.settingsObj.server) {
+      this.client = mqtt.connect(this.settingsObj.server);
 
-      this.client.on('connect', async () => {
+      this.client.on("connect", async () => {
         let listeners = await MQTTModel.findAll();
 
-        listeners.forEach(listener => {
+        listeners.forEach((listener) => {
           this.client.subscribe(listener.event, (err) => {
-            this.client.on('message', async (topic, message) => {
+            this.client.on("message", async (topic, message) => {
               console.log("Received MQTT message. Dispensing feed.");
               let servo = await Servo.findByPk(listener.servo_id);
 
@@ -46,6 +46,20 @@ class MQTT {
           });
         });
       });
+    }
+  }
+
+  publish(size) {
+    if (
+      this.settingsObj.enable &&
+      this.settingsObj.feed_event_name &&
+      this.client
+    ) {
+      if (typeof size != "string") {
+        size = size.toString();
+      }
+
+      this.client.publish(this.settingsObj.feed_event_name, size);
     }
   }
 
