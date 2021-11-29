@@ -88,6 +88,30 @@ class Config {
     }
   }
 
+  initalizeDatabaseConfig(database) {
+    this.database = database;
+  }
+
+  async getConfigEntry(namespace, key) {
+    let Setting = this.database.modelFactory("Setting");
+    let setting = await Setting.findOne({
+      where: {
+        namespace: namespace,
+        key: key
+      }
+    });
+
+    if (setting) {
+      return setting.value;
+    }
+
+    if (this.config[namespace] && this.config[namespace][key]) {
+      return this.config[namespace][key];
+    }
+
+    return undefined;
+  }
+
   getConfig() {
     return this.config;
   }

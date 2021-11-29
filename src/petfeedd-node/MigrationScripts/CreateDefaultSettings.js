@@ -6,6 +6,18 @@ class CreateDefaultSettings extends MigrationScript {
     console.log("Checking that database configuration is up to date.");
     let settings = [
       {
+        namespace: "general",
+        key: "name",
+        type: "string",
+        value: "petfeedd"
+      },
+      {
+        namespace: "zeroconf",
+        key: "enable",
+        type: "bool",
+        value: 1
+      },
+      {
         namespace: "mqtt",
         key: "enable",
         type: "bool",

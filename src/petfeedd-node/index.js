@@ -17,6 +17,9 @@ configObj.loadConfig();
   let migrations = require("./MigrationScripts");
   migrations.run(configObj.getConfig(), Database);
 
+  // Load the database into the config instance.
+  configObj.initalizeDatabaseConfig(Database);
+
   // Start the web server.
   Web.listen();
 

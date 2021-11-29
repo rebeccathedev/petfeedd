@@ -28,15 +28,19 @@ const Configuration = () => import("./Views/Configuration.vue");
 const Feeds = () => import("./Views/Feeds.vue");
 const Servos = () => import("./Views/Servos.vue");
 const MQTT = () => import("./Views/MQTT.vue");
+const Notifications = () => import("./Views/Notifications.vue");
+const General = () => import("./Views/General.vue");
 
 // Create the routes.
 const routes = [
   { path: "/", redirect: { name: "home" } },
   { path: "/home", component: Home, name: "home" },
-  { path: "/configuration", component: Configuration, redirect: { name: "config.feeds" }, name: "config", children: [
+  { path: "/configuration", component: Configuration, redirect: { name: "config.general" }, name: "config", children: [
+    { path: "general", component: General, name: "config.general"},
     { path: "feeds", component: Feeds, name: "config.feeds"},
     { path: "servos", component: Servos, name: "config.servos"},
     { path: "mqtt", component: MQTT, name: "config.mqtt"},
+    { path: "notifications", component: Notifications, name: "config.notifications"},
   ] },
 ];
 
