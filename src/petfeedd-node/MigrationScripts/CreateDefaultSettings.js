@@ -12,7 +12,7 @@ class CreateDefaultSettings extends MigrationScript {
         value: "petfeedd"
       },
       {
-        namespace: "zeroconf",
+        namespace: "bonjour",
         key: "enable",
         type: "bool",
         value: 1

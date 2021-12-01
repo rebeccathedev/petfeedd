@@ -1,10 +1,13 @@
 const moment = require('moment');
 const schedule = require('node-schedule');
-const bus = require('./event-bus');
-const database = require("./database");
+const bus = require('../event-bus');
+const database = require("../database");
 
-class Scheduler {
+const Library = require("./Library");
+
+class Scheduler extends Library {
   constructor(database) {
+    super();
     this.database = database;
     this.jobs = [];
   }

@@ -1,12 +1,20 @@
 const mqtt = require("mqtt");
-const database = require("./database");
-const bus = require("./event-bus");
+const database = require("../database");
+const bus = require("../event-bus");
 
-class MQTT {
+const Library = require("./Library");
+
+class MQTT extends Library {
+  constructor(database) {
+    super();
+    this.database = database;
+  }
+
   async run() {
-    const Setting = database.modelFactory("Setting");
-    const MQTTModel = database.modelFactory("MQTT");
-    const Servo = database.modelFactory("Servo");
+    console.log("Starting MQTT.");
+    const Setting = this.database.modelFactory("Setting");
+    const MQTTModel = this.database.modelFactory("MQTT");
+    const Servo = this.database.modelFactory("Servo");
 
     let settings = await Setting.findAll({
       where: {
@@ -63,11 +71,11 @@ class MQTT {
     }
   }
 
-  reconfigure() {
-    console.log("Reconfiguring MQTT.");
+  async reload() {
+    console.log("Reloading MQTT.");
     this.client.end();
     this.run();
   }
 }
 
-module.exports = new MQTT();
+module.exports = new MQTT(database);
