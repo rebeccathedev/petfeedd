@@ -5,6 +5,7 @@
         <router-link :to="{name: 'config.general'}" class="nav-link">General</router-link>
         <router-link :to="{name: 'config.feeds'}" class="nav-link">Feeds</router-link>
         <router-link :to="{name: 'config.servos'}" class="nav-link">Servos</router-link>
+        <router-link :to="{name: 'config.buttons'}" class="nav-link">Buttons</router-link>
         <router-link :to="{name: 'config.mqtt'}" class="nav-link">MQTT</router-link>
         <router-link :to="{name: 'config.notifications'}" class="nav-link">Notifications</router-link>
       </nav>

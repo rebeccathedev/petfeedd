@@ -30,6 +30,7 @@ const Servos = () => import("./Views/Servos.vue");
 const MQTT = () => import("./Views/MQTT.vue");
 const Notifications = () => import("./Views/Notifications.vue");
 const General = () => import("./Views/General.vue");
+const Buttons = () => import("./Views/Buttons.vue");
 
 // Create the routes.
 const routes = [
@@ -40,6 +41,7 @@ const routes = [
     { path: "feeds", component: Feeds, name: "config.feeds"},
     { path: "servos", component: Servos, name: "config.servos"},
     { path: "mqtt", component: MQTT, name: "config.mqtt"},
+    { path: "buttons", component: Buttons, name: "config.buttons"},
     { path: "notifications", component: Notifications, name: "config.notifications"},
   ] },
 ];

@@ -14,6 +14,7 @@ class Database {
       "Setting": require("./Models/Setting"),
       "Servo": require("./Models/Servo"),
       "MQTT": require("./Models/MQTT"),
+      "Button": require("./Models/Button"),
     }
   }
 
