@@ -1,16 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const database = require("./database");
+const database = require("../database");
 
-const MQTT = require("./Controllers/MQTT");
-const Settings = require("./Controllers/Settings");
-const Servos = require("./Controllers/Servos");
-const Feeds = require("./Controllers/Feeds");
-const FeedEvents = require("./Controllers/FeedEvents");
+const MQTT = require("../Controllers/MQTT");
+const Settings = require("../Controllers/Settings");
+const Servos = require("../Controllers/Servos");
+const Feeds = require("../Controllers/Feeds");
+const FeedEvents = require("../Controllers/FeedEvents");
 
-class Web {
+const Library = require("./Library");
+
+class Web extends Library {
   constructor(database) {
+    super();
     this.database = database;
     this.app = express();
     this.app.use(bodyParser.json());
@@ -27,7 +30,7 @@ class Web {
     });
 
     // This is the main / route that serves the Vue app.
-    this.app.use('/', express.static(path.join(__dirname, 'public')));
+    this.app.use('/', express.static(path.join(__dirname, '../public')));
 
     // Create a router for our API.
     var apiRouter = express.Router();
@@ -54,15 +57,13 @@ class Web {
       this.wrapper(controller, "delete")
     );
 
-    console.log(controller.getAdditionalRoutes());
-
     controller.getAdditionalRoutes().forEach(route => {
-      console.log("/" + path + route.path);
       apiRouter[route.method]("/" + path + route.path, this.wrapper(controller, route.callback));
     });
   }
 
-  listen() {
+  async run() {
+    console.log("Starting web interface.");
     this.app.listen(8080, () => {
       console.log(`petfeedd listening at http://localhost:8080`);
     });

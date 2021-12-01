@@ -5,18 +5,9 @@ const ini = require("ini");
 class Config {
   // Define a default config.
   config = {
-    logging: {
-      logging_enabled: 1,
-      logging_method: "stdout",
-    },
-
     general: {
       database: "petfeedd.db",
-      name: "petfeedd",
-    },
-
-    discovery: {
-      enabled: 1,
+      name: "My Pet Feeder",
     },
 
     web: {
@@ -34,6 +25,10 @@ class Config {
       enabled: 1,
       method: "stdout",
     },
+
+    bonjour: {
+      enable: 1
+    }
   };
 
   loadConfig() {

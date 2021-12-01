@@ -1,6 +1,6 @@
 const REST = require("./REST");
 const bus = require("../event-bus");
-const scheduler = require("../scheduler");
+const scheduler = require("../Core/Scheduler");
 
 class Feeds extends REST {
   model = "Feed";

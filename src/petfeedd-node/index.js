@@ -1,33 +1,41 @@
-const Database = require("./database");
-const Web = require("./web");
-const Scheduler = require("./scheduler");
-const Feeder = require("./feeder");
-const MQTT = require("./mqtt");
-
 console.log("petfeedd is starting up. :)");
+
+const glob = require("glob");
+const Database = require("./database");
+const bus = require('./event-bus');
 
 // Load our initial config.
 var configObj = require("./config");
 configObj.loadConfig();
 
-// Run any migration scripts
 (async () => {
+  // Run any migrations
   await Database.runMigrations();
 
+  // Run any migration scripts.
   let migrations = require("./MigrationScripts");
   migrations.run(configObj.getConfig(), Database);
 
   // Load the database into the config instance.
   configObj.initalizeDatabaseConfig(Database);
 
-  // Start the web server.
-  Web.listen();
+  // Loop and load all the core libraries.
+  glob(__dirname + "/Core/**.js", null, (er, files) => {
+    files.forEach(async file => {
+      // Create name from file.
+      let name = file.split(/[\\/]/).pop().replace(".js", "").toLowerCase();
 
-  // Start the feed listener.
-  Feeder.start();
+      let enabled = await configObj.getConfigEntry(name, "enable") ?? true;
+      let instance = require(file);
+      if (enabled && instance.run) {
 
-  // Start the scheduler.
-  Scheduler.run();
+        // Start core lib.
+        instance.run();
 
-  MQTT.run();
+        // Add event bus entries for these.
+        bus.on(name + ".reload", () => instance.reload());
+        bus.on(name + ".shutdown", () => instance.shutdown());
+      }
+    });
+  });
 })();

@@ -1,6 +1,11 @@
 <template>
   <div>
     <h2>MQTT</h2>
+    <p>
+      MQTT is a lightweight publisher-subscriber ("pub-sub") messaging protocol.
+      petfeedd can be configured to both send messages to and act on messages
+      from an MQTT broker.
+    </p>
     <div class="row">
       <div class="col">
         <div class="form-check my-2">
@@ -20,7 +25,7 @@
         </div>
       </div>
 
-      <h4>MQTT Broadcast Events</h4>
+      <h4 class="mt-2">MQTT Broadcast Events</h4>
 
       <div class="row">
         <div class="col mt-2 mb-4">
@@ -29,7 +34,13 @@
         </div>
       </div>
 
-      <h4>MQTT Listen Events</h4>
+      <h4 class="mt-2">MQTT Listen Events</h4>
+      <p>
+        MQTT Listen Events allows you to configure petfeedd to listen for certain
+        events and run a feed when they happen. You may optionally send a feed
+        size as the data for the event. Otherwise, the default feed size
+        configured below will be used.
+      </p>
       <div class="card mb-2" v-for="(listen, key) in mqttEvents" :key="key">
         <div class="card-body">
           <div class="row">

@@ -1,13 +1,17 @@
-const bus = require('./event-bus');
+const bus = require('../event-bus');
 const Gpio = require('pigpio').Gpio;
-const mqtt = require('./mqtt');
+const mqtt = require('../Core/mqtt');
+const database = require("../database");
 
-class Feeder {
+const Library = require("./Library");
+
+class Feeder extends Library {
   constructor(database) {
-    this.database = require("./database");
+    super();
+    this.database = database;
   }
 
-  start() {
+  async run() {
     console.log("Listening for feeds.");
     bus.on('feed', (...args) => this.feed(...args));
   }
@@ -51,4 +55,4 @@ class Feeder {
   }
 }
 
-module.exports = new Feeder;
+module.exports = new Feeder(database);
