@@ -8,6 +8,7 @@ const Settings = require("../Controllers/Settings");
 const Servos = require("../Controllers/Servos");
 const Feeds = require("../Controllers/Feeds");
 const FeedEvents = require("../Controllers/FeedEvents");
+const Buttons = require("../Controllers/Buttons");
 
 const Library = require("./Library");
 
@@ -42,6 +43,7 @@ class Web extends Library {
     this.buildCrud(apiRouter, "servos", new Servos(database));
     this.buildCrud(apiRouter, "mqtt", new MQTT(database));
     this.buildCrud(apiRouter, "settings", new Settings(database));
+    this.buildCrud(apiRouter, "buttons", new Buttons(database));
   }
 
   buildCrud(apiRouter, path, controller) {
