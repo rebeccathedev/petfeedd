@@ -8,6 +8,7 @@ class Config {
     general: {
       database: "petfeedd.db",
       name: "My Pet Feeder",
+      paused: 0
     },
 
     web: {

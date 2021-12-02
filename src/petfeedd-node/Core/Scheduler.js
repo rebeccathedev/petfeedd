@@ -48,11 +48,13 @@ class Scheduler extends Library {
     let servo = await Servo.findByPk(feed.servo_id);
 
     // do the feed!
-    console.log("Running a feed.");
+    console.log("Running a feed: " + feed.name);
     bus.emit('feed', {
       pin: servo.pin,
       time: servo.feed_time * feed.size
     });
+
+    console.log("Next time feed " + feed.name + ": " + job.nextInvocation());
   }
 
   async cancelAllJobs() {
