@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>MQTT</h2>
     <p>
       MQTT is a lightweight publisher-subscriber ("pub-sub") messaging protocol.
       petfeedd can be configured to both send messages to and act on messages
@@ -44,12 +43,12 @@
       <div class="card mb-2" v-for="(listen, key) in mqttEvents" :key="key">
         <div class="card-body">
           <div class="row">
-            <div class="form-group col-md-8">
+            <div class="form-group col-lg-8 col-md-5">
               <label for="listen.event">Event</label>
               <input class="form-control" type="input" name="listen.event" value="1" step="1" v-model="listen.event">
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-lg-2 col-md-3 mt-2 mt-md-0">
               <label for="listen.servo_id">Servo</label>
               <select class="form-select" v-model="listen.servo_id">
                 <option v-for="servo in servos" :value="servo.id" :key="servo.id">
@@ -58,7 +57,7 @@
               </select>
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-lg-2 col-md-4 mt-2 mt-md-0">
               <label for="listen.default_feed_size">Default Feed Size</label>
               <input class="form-control" type="number" name="listen.default_feed_size" value="1" step="1" v-model="listen.default_feed_size">
             </div>
