@@ -17,10 +17,6 @@
         </div>
       </div>
     </div>
-
-    <div class="mt-4">
-      <button class="btn btn-success" @click="save()">Save</button>
-    </div>
   </div>
 </template>
 
@@ -59,6 +55,7 @@ export default {
   },
 
   mounted() {
+    this.$parent.$on("config.save", this.save);
 
     ["general", "bonjour"].forEach(ns => {
       this.$http({

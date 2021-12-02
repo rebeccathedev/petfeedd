@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import VueToast from "vue-toast-notification";
+import PortalVue from 'portal-vue'
 import Axios from "axios";
 
 // Import the base view.
@@ -14,6 +15,7 @@ import "vue-toast-notification/dist/theme-sugar.css";
 // Add plugins.
 Vue.use(VueRouter);
 Vue.use(VueToast);
+Vue.use(PortalVue);
 Vue.prototype.$http = Axios;
 Vue.prototype.$bootstrap = {
   Collapse,

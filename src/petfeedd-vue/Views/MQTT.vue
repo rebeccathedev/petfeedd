@@ -40,6 +40,7 @@
         size as the data for the event. Otherwise, the default feed size
         configured below will be used.
       </p>
+      <button class="btn btn-primary mb-3" @click="addListen()">Add Listen Event</button>
       <div class="card mb-2" v-for="(listen, key) in mqttEvents" :key="key">
         <div class="card-body">
           <div class="row">
@@ -70,11 +71,6 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary" @click="addListen()">Add Listen Event</button>
-    </div>
-
-    <div class="mt-4">
-      <button class="btn btn-success" @click="save()">Save</button>
     </div>
   </div>
 </template>
@@ -154,6 +150,8 @@ export default {
   },
 
   mounted() {
+    this.$parent.$on("config.save", this.save);
+
     this.$http({
       url: "/api/settings",
       method: "GET",

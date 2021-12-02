@@ -26,14 +26,29 @@
       </div>
     </div>
     <div class="col-lg-10 col-md-9">
-      <h2 class="d-none d-md-block">{{ $route.meta.title }}</h2>
+      <div class="d-flex align-items-center justify-content-end justify-content-md-between mb-3">
+        <h2 class="d-none d-md-block m-0">{{ $route.meta.title }}</h2>
+        <div class="d-flex ">
+          <portal-target name="toolbar"></portal-target>
+          <button class="btn btn-success ms-1" @click="save()">Save</button>
+        </div>
+      </div>
       <router-view></router-view>
+      <div class="my-3">
+
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  methods: {
+    save() {
+      this.$emit("config.save");
+    }
+  },
+
   watch:{
     $route (to, from) {
       // This is a fast way to check if the button is visible in the current
