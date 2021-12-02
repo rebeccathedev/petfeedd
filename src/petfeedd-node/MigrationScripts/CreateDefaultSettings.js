@@ -12,6 +12,12 @@ class CreateDefaultSettings extends MigrationScript {
         value: "petfeedd"
       },
       {
+        namespace: "general",
+        key: "paused",
+        type: "bool",
+        value: 0
+      },
+      {
         namespace: "bonjour",
         key: "enable",
         type: "bool",

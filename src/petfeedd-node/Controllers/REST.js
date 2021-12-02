@@ -13,8 +13,30 @@ class REST {
   async index(request, response) {
     let Model = this.database.modelFactory(this.model);
     let query = {};
+
     if (request.query) {
-      query.where = request.query;
+      if (request.query.sort && request.query.sort_direction) {
+        query.order = [
+          [request.query.sort, request.query.sort_direction]
+        ];
+
+        delete request.query.sort;
+        delete request.query.sort_direction;
+      }
+
+      if (request.query.limit) {
+        query.limit = request.query.limit;
+        delete request.query.limit;
+      }
+
+      if (request.query.offset) {
+        query.offset = request.query.offset;
+        delete request.query.offset;
+      }
+
+      if (request.query) {
+        query.where = request.query;
+      }
     }
 
     const data = await Model.findAll(query);

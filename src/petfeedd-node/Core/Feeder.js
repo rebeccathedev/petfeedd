@@ -1,6 +1,7 @@
-const bus = require('../event-bus');
-const Gpio = require('pigpio').Gpio;
-const mqtt = require('../Core/mqtt');
+const bus = require("../event-bus");
+const Gpio = require("pigpio").Gpio;
+const mqtt = require("../Core/mqtt");
+const config = require("../config");
 const database = require("../database");
 
 const Library = require("./Library");
@@ -13,13 +14,19 @@ class Feeder extends Library {
 
   async run() {
     console.log("Listening for feeds.");
-    bus.on('feed', (...args) => this.feed(...args));
+    bus.on("feed", (...args) => this.feed(...args));
   }
 
   async feed(feedData) {
+    let isPaused = parseInt(await config.getConfigEntry("general", "paused"));
+    if (isPaused) {
+      console.log("Avoiding a feed because we are paused.");
+      return;
+    }
+
     try {
       let motor = new Gpio(feedData.pin, {
-        mode: Gpio.OUTPUT
+        mode: Gpio.OUTPUT,
       });
 
       motor.servoWrite(2500);
@@ -27,9 +34,8 @@ class Feeder extends Library {
       motor.servoWrite(0);
 
       mqtt.publish(feedData.size);
-
     } catch (error) {
-      console.log("Could not enable GPIO.")
+      console.log("Could not enable GPIO.");
       console.log(error);
     }
 
@@ -50,7 +56,7 @@ class Feeder extends Library {
 
     FeedEvent.create({
       name: feedName,
-      size: feedData.size
+      size: feedData.size,
     });
   }
 }

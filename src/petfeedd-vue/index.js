@@ -8,6 +8,7 @@ import App from "./Views/App.vue";
 
 // Import the bootstrap CSS.
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle";
 import 'vue-toast-notification/dist/theme-sugar.css';
 
 // Add plugins.
