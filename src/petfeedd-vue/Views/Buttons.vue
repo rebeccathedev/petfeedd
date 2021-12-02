@@ -1,15 +1,14 @@
 <template>
   <div>
-    <h2>Buttons</h2>
     <div class="servo mb-2 card" v-for="button in buttons" :key="button.id">
       <div class="card-body">
         <div class="row">
-          <div class="form-group col-md-2">
+          <div class="form-group col-lg-2 col-md-4">
             <label for="button.pin">Pin</label>
             <input class="form-control" type="number" name="button.pin" value="1" step="1" v-model="button.pin">
           </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-lg-4 col-md-4 mt-2 mt-md-0">
               <label for="button.servo_id">Servo</label>
               <select class="form-select" v-model="button.servo_id">
                 <option v-for="servo in servos" :value="servo.id" :key="servo.id">
@@ -18,7 +17,7 @@
               </select>
             </div>
 
-          <div class="form-group col-md-2">
+          <div class="form-group col-lg-2 col-md-4 mt-2 mt-md-0">
             <label for="button.default_feed_size">Default Feed Size</label>
             <input class="form-control" type="number" name="button.default_feed_size" value="1" step="1" v-model="button.default_feed_size">
           </div>

@@ -1,15 +1,14 @@
 <template>
   <div>
-    <h2>Feeds</h2>
     <div class="feed card mb-2" v-for="feed in feeds" :key="feed.id">
       <div class="card-body">
         <div class="row">
-          <div class="form-group col-md-7">
+          <div class="form-group col-lg-7 col-md-6">
             <label for="feed.name">Name</label>
             <input class="form-control" type="input" name="feed.name" value="1" step="1" v-model="feed.name">
           </div>
 
-          <div class="form-group col-md-2">
+          <div class="form-group col-lg-2 col-md-6">
             <label for="feed.servo_id">Servo</label>
             <select class="form-select" v-model="feed.servo_id">
               <option v-for="servo in servos" :value="servo.id" :key="servo.id">
@@ -18,18 +17,18 @@
             </select>
           </div>
 
-          <div class="form-group col-md-2">
+          <div class="form-group col-lg-2 col-md-6 mt-2 mt-lg-0">
             <label for="feed.time">Time</label>
             <input class="form-control" type="time" name="feed.time" value="00:00" step="60" v-model="feed.time">
           </div>
 
-          <div class="form-group col-md-1">
+          <div class="form-group col-lg-1 col-md-6 mt-2 mt-lg-0">
             <label for="feed.size">Size</label>
             <input class="form-control" type="number" name="feed.size" value="1" step="1" v-model="feed.size">
           </div>
         </div>
         <div class="row mt-2">
-          <div class="col-md-12">
+          <div class="col-lg-12">
             <button class="btn btn-danger" v-on:click='deleteFeed(feed)'>Delete</button>
           </div>
         </div>
