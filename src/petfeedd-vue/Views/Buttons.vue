@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="servo mb-2 card" v-for="button in buttons" :key="button.id">
+    <portal to="toolbar">
+      <button class="btn btn-primary" @click="addButton()">Add Button</button>
+    </portal>
+    <div class="servo card" v-for="button in buttons" :key="button.id">
       <div class="card-body">
         <div class="row">
           <div class="form-group col-lg-2 col-md-4">
@@ -28,11 +31,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="mt-4">
-      <button class="btn btn-primary" @click="addButton()">Add Button</button>
-      <button class="btn btn-success" @click="save()">Save</button>
     </div>
   </div>
 </template>
@@ -90,6 +88,8 @@ export default {
     }
   },
   mounted() {
+    this.$parent.$on("config.save", this.save);
+
     this.$http({
       url: "/api/buttons",
       method: "GET"

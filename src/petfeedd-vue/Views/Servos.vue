@@ -1,5 +1,8 @@
 <template>
   <div>
+    <portal to="toolbar">
+      <button class="btn btn-primary" @click="addServo()">Add Servo</button>
+    </portal>
     <div class="servo mb-2 card" v-for="servo in servos" :key="servo.id">
       <div class="card-body">
         <div class="row">
@@ -24,11 +27,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="mt-4">
-      <button class="btn btn-primary" @click="addServo()">Add Servo</button>
-      <button class="btn btn-success" @click="save()">Save</button>
     </div>
   </div>
 </template>
@@ -85,6 +83,8 @@ export default {
     }
   },
   mounted() {
+    this.$parent.$on("config.save", this.save);
+
     this.$http({
       url: "/api/servos",
       method: "GET"

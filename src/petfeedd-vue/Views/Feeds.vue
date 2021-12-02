@@ -1,5 +1,8 @@
 <template>
   <div>
+    <portal to="toolbar">
+      <button class="btn btn-primary" @click="addFeed()">Add Feed</button>
+    </portal>
     <div class="feed card mb-2" v-for="feed in feeds" :key="feed.id">
       <div class="card-body">
         <div class="row">
@@ -33,11 +36,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="mt-4">
-      <button class="btn btn-primary" @click="addFeed()">Add Feed</button>
-      <button class="btn btn-success" @click="save()">Save</button>
     </div>
   </div>
 </template>
@@ -96,6 +94,8 @@ export default {
     }
   },
   mounted() {
+    this.$parent.$on("config.save", this.save);
+
     this.$http({
       url: "/api/feeds",
       method: "GET"
