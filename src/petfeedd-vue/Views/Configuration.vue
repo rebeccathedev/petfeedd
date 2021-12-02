@@ -34,9 +34,6 @@
         </div>
       </div>
       <router-view></router-view>
-      <div class="my-3">
-
-      </div>
     </div>
   </div>
 </template>
