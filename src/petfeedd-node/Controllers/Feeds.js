@@ -10,15 +10,23 @@ class Feeds extends REST {
       {
         method: "get",
         path: "/:" + this.primaryKey + "/feed",
-        callback: "feed"
-      }
-    ]
+        callback: "feed",
+      },
+    ];
   }
 
   async create(request, response) {
     response = await super.create(request, response);
 
-    scheduler.rescheduleAllJobs();
+    scheduler.reload();
+
+    return response;
+  }
+
+  async update(request, response) {
+    response = await super.update(request, response);
+
+    scheduler.reload();
 
     return response;
   }

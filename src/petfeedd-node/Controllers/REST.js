@@ -80,6 +80,32 @@ class REST {
     return response.send(data);
   }
 
+  async bulkUpdate(request, response) {
+    let Model = this.database.modelFactory(this.model);
+
+    let ret = [];
+
+    if (Array.isArray(request.body)) {
+      for (const obj of request.body) {
+        if (obj[this.primaryKey]) {
+          var data = await Model.findByPk(obj[this.primaryKey]);
+
+          for (const key in obj) {
+            if (Object.hasOwnProperty.call(obj, key)) {
+              const value = obj[key];
+              data[key] = value;
+            }
+          }
+
+          data.save();
+          ret.push(data);
+        }
+      }
+    }
+
+    return response.send(data);
+  }
+
   async delete(request, response) {
     let Model = this.database.modelFactory(this.model);
     var data = await Model.findByPk(request.params[this.primaryKey]);

@@ -13,7 +13,7 @@ class Scheduler extends Library {
   }
 
   async run() {
-    console.log("Scheduling jobs.");
+    this.logger.info("Scheduling jobs.");
     let Feed = this.database.modelFactory("Feed");
     let feeds = await Feed.findAll();
 
@@ -36,7 +36,7 @@ class Scheduler extends Library {
       this.feed(feed, job);
     });
 
-    console.log("Scheduled a feed for " + feed.time + " daily. Next feed: " + job.nextInvocation());
+    this.logger.info("Scheduled a feed for " + feed.time + " daily. Next feed: " + job.nextInvocation());
 
     job.feed = feed;
 
@@ -48,25 +48,25 @@ class Scheduler extends Library {
     let servo = await Servo.findByPk(feed.servo_id);
 
     // do the feed!
-    console.log("Running a feed: " + feed.name);
+    this.logger.info("Running a feed: " + feed.name);
     bus.emit('feed', {
       pin: servo.pin,
       time: servo.feed_time * feed.size
     });
 
-    console.log("Next time feed " + feed.name + ": " + job.nextInvocation());
+    this.logger.info("Next time feed " + feed.name + ": " + job.nextInvocation());
   }
 
   async cancelAllJobs() {
     this.jobs.forEach(job => {
-      console.log("Cancelling job scheduled for " + job.nextInvocation());
+      this.logger.info("Cancelling job scheduled for " + job.nextInvocation());
       schedule.cancelJob(job);
     });
 
     this.jobs = [];
   }
 
-  async rescheduleAllJobs() {
+  async reload() {
     this.cancelAllJobs();
     this.run();
   }

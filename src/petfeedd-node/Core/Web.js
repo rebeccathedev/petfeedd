@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const database = require("../database");
+const bus = require("../event-bus");
 
 const MQTT = require("../Controllers/MQTT");
 const Settings = require("../Controllers/Settings");
@@ -44,11 +45,14 @@ class Web extends Library {
     this.buildCrud(apiRouter, "mqtt", new MQTT(database));
     this.buildCrud(apiRouter, "settings", new Settings(database));
     this.buildCrud(apiRouter, "buttons", new Buttons(database));
+
+    apiRouter.get("/reload/:type", this.reloadCore)
   }
 
   buildCrud(apiRouter, path, controller) {
     apiRouter.get("/" + path, this.wrapper(controller, "index"));
     apiRouter.post("/" + path, this.wrapper(controller, "create"));
+    apiRouter.put("/" + path, this.wrapper(controller, "bulkUpdate"));
     apiRouter.get("/" + path + "/:" + controller.primaryKey,
       this.wrapper(controller, "get")
     );
@@ -65,9 +69,9 @@ class Web extends Library {
   }
 
   async run() {
-    console.log("Starting web interface.");
+    this.logger.info("Starting web interface.");
     this.app.listen(8080, () => {
-      console.log(`petfeedd listening at http://localhost:8080`);
+      this.logger.info(`petfeedd listening at http://localhost:8080`);
     });
   }
 
@@ -80,6 +84,12 @@ class Web extends Library {
         next(e)
       }
     }
+  }
+
+  reloadCore(request, response) {
+    let type = request.params.type;
+    bus.emit(type + ".reload");
+    return response.status(200).send();
   }
 }
 

@@ -10,7 +10,7 @@ class Buttons extends Library {
   }
 
   async run() {
-    console.log("Starting Buttons.");
+    this.logger.info("Starting Buttons.");
 
     let Button = this.database.modelFactory("Button");
     let Servo = this.database.modelFactory("Servo");
@@ -38,12 +38,22 @@ class Buttons extends Library {
             });
           });
 
+          button.gpio = gpioObj.off
+
           this.buttons.push(button);
         } catch (error) {
-          console.error("Could not initialize GPIO.");
+          this.logger.error("Could not initialize GPIO.");
         }
       }
     }
+  }
+
+  async reload() {
+    this.logger.info("Reloading Buttons.");
+    for (const button of this.buttons) {
+      button.gpio.off("interrupt");
+    }
+    this.run();
   }
 }
 

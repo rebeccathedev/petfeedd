@@ -13,14 +13,14 @@ class Feeder extends Library {
   }
 
   async run() {
-    console.log("Listening for feeds.");
+    this.logger.info("Listening for feeds.");
     bus.on("feed", (...args) => this.feed(...args));
   }
 
   async feed(feedData) {
     let isPaused = parseInt(await config.getConfigEntry("general", "paused"));
     if (isPaused) {
-      console.log("Avoiding a feed because we are paused.");
+      this.logger.warning("Avoiding a feed because we are paused.");
       return;
     }
 
@@ -35,8 +35,7 @@ class Feeder extends Library {
 
       mqtt.publish(feedData.size);
     } catch (error) {
-      console.log("Could not enable GPIO.");
-      console.log(error);
+      this.logger.error("Could not enable GPIO.");
     }
 
     var feedName = feedData.name || "Received";
@@ -54,10 +53,12 @@ class Feeder extends Library {
       feedName += " (On Demand)";
     }
 
-    FeedEvent.create({
+    let f = await FeedEvent.create({
       name: feedName,
       size: feedData.size,
     });
+
+    bus.emit("feed.completed", f);
   }
 }
 
