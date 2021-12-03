@@ -3,7 +3,7 @@ const MigrationScript = require("./MigrationScript");
 class CreateDefaultSettings extends MigrationScript {
   async migrate() {
     let Setting = this.database.modelFactory("Setting");
-    console.log("Checking that database configuration is up to date.");
+    this.logger.info("Checking that database configuration is up to date.");
     let settings = [
       {
         namespace: "general",
@@ -40,7 +40,43 @@ class CreateDefaultSettings extends MigrationScript {
         key: "broadcast_event",
         type: "string",
         value: ""
-      }
+      },
+      {
+        namespace: "twitter",
+        key: "enable",
+        type: "bool",
+        value: 0
+      },
+      {
+        namespace: "twitter",
+        key: "consumer_key",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "twitter",
+        key: "consumer_secret",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "twitter",
+        key: "access_token_key",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "twitter",
+        key: "access_token_secret",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "twitter",
+        key: "message_format",
+        type: "string",
+        value: "{feeder_name} dispensed {size} feeds at {event_date}"
+      },
     ];
 
     for (const setting of settings) {

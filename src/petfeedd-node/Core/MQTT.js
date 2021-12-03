@@ -11,7 +11,7 @@ class MQTT extends Library {
   }
 
   async run() {
-    console.log("Starting MQTT.");
+    this.logger.info("Starting MQTT.");
     const Setting = this.database.modelFactory("Setting");
     const MQTTModel = this.database.modelFactory("MQTT");
     const Servo = this.database.modelFactory("Servo");
@@ -40,7 +40,7 @@ class MQTT extends Library {
         listeners.forEach((listener) => {
           this.client.subscribe(listener.event, (err) => {
             this.client.on("message", async (topic, message) => {
-              console.log("Received MQTT message. Dispensing feed.");
+              this.logger.info("Received MQTT message. Dispensing feed.");
               let servo = await Servo.findByPk(listener.servo_id);
 
               bus.emit("feed", {
@@ -72,7 +72,7 @@ class MQTT extends Library {
   }
 
   async reload() {
-    console.log("Reloading MQTT.");
+    this.logger.info("Reloading MQTT.");
     this.client.end();
     this.run();
   }

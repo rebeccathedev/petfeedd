@@ -71,6 +71,10 @@ export default {
         });
       });
     });
+  },
+
+  beforeDestroy() {
+    this.$parent.$off("config.save", this.save);
   }
 }
 </script>

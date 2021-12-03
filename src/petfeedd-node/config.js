@@ -1,6 +1,10 @@
 const commandLineArgs = require("command-line-args");
 const fs = require("fs");
 const ini = require("ini");
+const log4js = require("log4js");
+
+let logger = log4js.getLogger("Config");
+logger.level = "debug";
 
 class Config {
   // Define a default config.
@@ -66,8 +70,8 @@ class Config {
         if (commonLocations.hasOwnProperty(i)) {
           const location = commonLocations[i];
           if (fs.existsSync(location)) {
-            console.log("Config file found at " + location);
-            console.log("Parsing configuration.");
+            logger.info("Config file found at " + location);
+            logger.info("Parsing configuration.");
             this.config = ini.parse(fs.readFileSync(location, "utf-8"));
             config_loaded = true;
             break;
@@ -78,7 +82,7 @@ class Config {
 
     // Warn if we don't have a config file.
     if (!config_loaded) {
-      console.log(
+      logger.info(
         "No config file specified. Proceeding with defaults and environment."
       );
     }

@@ -4,7 +4,7 @@ class CreateServo extends MigrationScript {
   async migrate() {
     let Servo = this.database.modelFactory("Servo");
     if (await Servo.count() == 0) {
-      console.log("Migrating from config to database servo control.");
+      this.logger.info("Migrating from config to database servo control.");
       Servo.create({
         name: "Default",
         pin: this.config.gpio.servo_pin,

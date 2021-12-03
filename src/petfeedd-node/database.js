@@ -1,9 +1,14 @@
 const Umzug = require("umzug");
 const path = require("path");
+const log4js = require("log4js");
 
 class Database {
   constructor(database) {
-    console.log("Initializing database.");
+    // Load logger
+    this.logger = log4js.getLogger("Database");
+    this.logger.level = "debug";
+
+    this.logger.info("Initializing database.");
 
     // Initalize ORM.
     this.sequelize = require("./sequelize");
@@ -31,9 +36,9 @@ class Database {
       },
     });
 
-    console.log("Running migrations.");
+    this.logger.info("Running migrations.");
     await umzug.up();
-    console.log("All migrations performed successfully");
+    this.logger.info("All migrations performed successfully");
   }
 
   modelFactory(model) {

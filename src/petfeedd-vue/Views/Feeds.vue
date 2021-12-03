@@ -109,6 +109,9 @@ export default {
     }).then(response => {
       this.servos = response.data;
     });
+  },
+  beforeDestroy() {
+    this.$parent.$off("config.save", this.save);
   }
 }
 </script>

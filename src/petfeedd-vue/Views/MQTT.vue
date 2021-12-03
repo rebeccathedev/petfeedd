@@ -77,9 +77,10 @@
 
 <script>
 import SettingTransformer from "../Mixins/SettingTransformer";
+import SaveSettings from "../Mixins/SaveSettings";
 
 export default {
-  mixins: [SettingTransformer],
+  mixins: [SettingTransformer, SaveSettings],
   methods: {
     addListen() {
       this.mqttEvents.push({
@@ -120,19 +121,7 @@ export default {
         }
       });
 
-      for (const i in this.mqtt) {
-        if (Object.hasOwnProperty.call(this.mqtt, i)) {
-          const setting = this.mqtt[i];
-          var sendSetting = Object.assign({}, setting);
-          this.prepareSettings(sendSetting);
-
-          this.$http({
-            url: "/api/settings/" + setting.id,
-            method: "PUT",
-            data: sendSetting
-          });
-        }
-      }
+      this.saveSettings({mqtt: this.mqtt});
     }
   },
 
@@ -178,6 +167,10 @@ export default {
     }).then(response => {
       this.servos = response.data;
     });
+  },
+
+  beforeDestroy() {
+    this.$parent.$off("config.save", this.save);
   }
 }
 </script>

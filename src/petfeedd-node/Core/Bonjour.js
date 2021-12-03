@@ -11,19 +11,25 @@ class Bonjour extends Library {
   }
 
   async run() {
-    console.log("Starting Bonjour/Zeroconf.");
+    this.logger.info("Starting Bonjour/Zeroconf.");
 
     let port = parseInt(await config.getConfigEntry("web", "bind_port"));
     let name = await config.getConfigEntry("general", "name");
     let bonjour = new BonjourService();
-    let service = bonjour.publish({
+    this.service = bonjour.publish({
       name: name,
       type: 'petfeedd',
       protocol: "tcp",
       port: port
     });
 
-    service.start();
+    this.service.start();
+  }
+
+  async reload() {
+    this.logger.info("Reloading Bonjour/Zeroconf.");
+    this.service.stop();
+    this.run();
   }
 }
 
