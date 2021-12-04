@@ -1,6 +1,5 @@
 const REST = require("./REST");
 const bus = require("../event-bus");
-const scheduler = require("../Core/Scheduler");
 
 class Feeds extends REST {
   model = "Feed";
@@ -18,7 +17,7 @@ class Feeds extends REST {
   async create(request, response) {
     response = await super.create(request, response);
 
-    scheduler.reload();
+    bus.emit("scheduler.reload");
 
     return response;
   }
@@ -26,7 +25,7 @@ class Feeds extends REST {
   async update(request, response) {
     response = await super.update(request, response);
 
-    scheduler.reload();
+    bus.emit("scheduler.reload");
 
     return response;
   }
@@ -34,7 +33,7 @@ class Feeds extends REST {
   async bulkUpdate(request, response) {
     response = await super.bulkUpdate(request, response);
 
-    scheduler.reload();
+    bus.emit("scheduler.reload");
 
     return response;
   }

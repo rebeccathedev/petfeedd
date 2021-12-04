@@ -10,6 +10,7 @@ const Servos = require("../Controllers/Servos");
 const Feeds = require("../Controllers/Feeds");
 const FeedEvents = require("../Controllers/FeedEvents");
 const Buttons = require("../Controllers/Buttons");
+const Util = require("../Controllers/Util");
 
 const Library = require("./Library");
 
@@ -46,7 +47,10 @@ class Web extends Library {
     this.buildCrud(apiRouter, "settings", new Settings(database));
     this.buildCrud(apiRouter, "buttons", new Buttons(database));
 
-    apiRouter.get("/reload/:type", this.reloadCore)
+    // Build the util routes
+    let util = new Util(database);
+    apiRouter.get("/util/emailtest", this.wrapper(util, "testEmail"));
+    apiRouter.get("/util/reload/:type", this.wrapper(util, "reloadCore"));
   }
 
   buildCrud(apiRouter, path, controller) {
@@ -84,12 +88,6 @@ class Web extends Library {
         next(e)
       }
     }
-  }
-
-  reloadCore(request, response) {
-    let type = request.params.type;
-    bus.emit(type + ".reload");
-    return response.status(200).send();
   }
 }
 
