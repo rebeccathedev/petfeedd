@@ -25,6 +25,7 @@ class Email extends Library {
       };
 
       bus.on("feed.completed", this.feedCompleteCall);
+      bus.on("email.test", this.feedCompleteCall);
     }
   }
 
@@ -71,6 +72,7 @@ class Email extends Library {
     this.logger.info("Reloading");
     if (this.feedCompleteCall) {
       bus.removeListener("feed.completed", this.feedCompleteCall);
+      bus.removeListener("email.test", this.feedCompleteCall);
     }
     this.run();
   }
@@ -79,6 +81,7 @@ class Email extends Library {
     this.logger.info("Stopping");
     if (this.feedCompleteCall) {
       bus.removeListener("feed.completed", this.feedCompleteCall);
+      bus.removeListener("email.test", this.feedCompleteCall);
     }
   }
 }

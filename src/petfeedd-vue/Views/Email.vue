@@ -1,5 +1,8 @@
 <template>
   <div>
+    <portal to="toolbar">
+      <button class="btn btn-primary" @click="testEmail()">Test Email</button>
+    </portal>
     <div class="row">
       <div class="col">
         <div class="form-check my-2">
@@ -76,8 +79,18 @@
 <script>
 export default {
   methods: {
-    save() {
-      this.saveSettings();
+    async save() {
+      await this.saveSettings();
+      this.$toast.open('Email Settings Saved');
+    },
+
+    async testEmail() {
+      await this.$http({
+        url: "/api/util/emailtest",
+        method: "GET"
+      });
+
+      this.$toast.open('Test Email Sent');
     }
   },
 
