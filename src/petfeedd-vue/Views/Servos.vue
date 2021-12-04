@@ -57,20 +57,10 @@ export default {
         }
       });
 
-      this.servos.forEach(async (servo) => {
-        if (servo.id) {
-          await this.$http({
-            url: "/api/servos/" + servo.id,
-            method: "PUT",
-            data: servo
-          });
-        } else {
-          await this.$http({
-            url: "/api/servos",
-            method: "POST",
-            data: servo
-          });
-        }
+      this.$http({
+        url: "/api/servos",
+        method: "PUT",
+        data: this.servos
       });
 
       this.$toast.open('Servos saved.');

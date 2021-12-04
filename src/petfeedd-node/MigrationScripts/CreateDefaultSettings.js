@@ -75,7 +75,67 @@ class CreateDefaultSettings extends MigrationScript {
         namespace: "twitter",
         key: "message_format",
         type: "string",
-        value: "{feeder_name} dispensed {size} feeds at {event_date}"
+        value: "{feeder_name} dispensed {feed_event.size} feeds at {feed_event.date_created}"
+      },
+      {
+        namespace: "email",
+        key: "enable",
+        type: "bool",
+        value: 0
+      },
+      {
+        namespace: "email",
+        key: "secure",
+        type: "bool",
+        value: 1
+      },
+      {
+        namespace: "email",
+        key: "from",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "email",
+        key: "from_address",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "email",
+        key: "subject",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "email",
+        key: "to",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "email",
+        key: "server",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "email",
+        key: "port",
+        type: "number",
+        value: 25
+      },
+      {
+        namespace: "email",
+        key: "username",
+        type: "string",
+        value: ""
+      },
+      {
+        namespace: "email",
+        key: "password",
+        type: "string",
+        value: ""
       },
     ];
 

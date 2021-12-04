@@ -67,20 +67,10 @@ export default {
         }
       });
 
-      this.feeds.forEach(async (feed)  => {
-        if (feed.id) {
-          this.$http({
-            url: "/api/feeds/" + feed.id,
-            method: "PUT",
-            data: feed
-          });
-        } else {
-          this.$http({
-            url: "/api/feeds",
-            method: "POST",
-            data: feed
-          });
-        }
+      this.$http({
+        url: "/api/feeds",
+        method: "PUT",
+        data: this.feeds
       });
 
       this.$toast.open('Feeds saved.');

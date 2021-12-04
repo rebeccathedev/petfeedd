@@ -1,0 +1,13 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          <p>petfeedd completed a feed!</p>
+          <strong>Size:</strong> {{feedEvent.size}}<br>
+          <strong>Date:</strong> {{feedEvent.date_created}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

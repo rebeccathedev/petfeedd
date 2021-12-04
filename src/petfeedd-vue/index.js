@@ -6,6 +6,7 @@ import Axios from "axios";
 
 // Import the base view.
 import App from "./Views/App.vue";
+import Settings from "./Mixins/Settings";
 
 // Import the bootstrap CSS.
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,6 +22,8 @@ Vue.prototype.$bootstrap = {
   Collapse,
 };
 
+Vue.mixin(Settings);
+
 // Disable caching on Axios calls.
 Vue.prototype.$http.defaults.headers = {
   "Cache-Control": "no-cache",
@@ -34,9 +37,10 @@ const Configuration = () => import("./Views/Configuration.vue");
 const Feeds = () => import("./Views/Feeds.vue");
 const Servos = () => import("./Views/Servos.vue");
 const MQTT = () => import("./Views/MQTT.vue");
-const Notifications = () => import("./Views/Notifications.vue");
 const General = () => import("./Views/General.vue");
 const Buttons = () => import("./Views/Buttons.vue");
+const Email = () => import("./Views/Email.vue");
+const Twitter = () => import("./Views/Twitter.vue");
 
 // Create the routes.
 const routes = [
@@ -79,10 +83,16 @@ const routes = [
         name: "config.buttons",
       },
       {
-        path: "notifications",
-        meta: { title: "Notifications" },
-        component: Notifications,
-        name: "config.notifications",
+        path: "email",
+        meta: { title: "Email Notifications" },
+        component: Email,
+        name: "config.email",
+      },
+      {
+        path: "twitter",
+        meta: { title: "Twitter Notifications" },
+        component: Twitter,
+        name: "config.twitter",
       },
     ],
   },
