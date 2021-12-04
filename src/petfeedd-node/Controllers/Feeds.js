@@ -31,6 +31,14 @@ class Feeds extends REST {
     return response;
   }
 
+  async bulkUpdate(request, response) {
+    response = await super.bulkUpdate(request, response);
+
+    scheduler.reload();
+
+    return response;
+  }
+
   async feed(request, response) {
     let Feed = this.database.modelFactory(this.model);
     let Servo = this.database.modelFactory("Servo");

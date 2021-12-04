@@ -11,39 +11,21 @@ class Twitter extends Library {
   }
 
   async run() {
-    this.consumer_key = await config.getConfigEntry("twitter", "consumer_key");
-    this.consumer_secret = await config.getConfigEntry(
-      "twitter",
-      "consumer_secret"
-    );
-    this.access_token_key = await config.getConfigEntry(
-      "twitter",
-      "access_token_key"
-    );
-    this.access_token_secret = await config.getConfigEntry(
-      "twitter",
-      "access_token_secret"
-    );
-    this.enable = await config.getConfigEntry("twitter", "enable");
-    this.message_format = await config.getConfigEntry(
-      "twitter",
-      "message_format"
-    );
-
+    this.config = await config.getConfigEntries("twitter");
     this.feeder_name = await config.getConfigEntry("general", "name");
 
     if (
-      this.enable &&
-      this.consumer_key &&
-      this.consumer_secret &&
-      this.access_token_key &&
-      this.access_token_secret
+      this.config.enable &&
+      this.config.consumer_key &&
+      this.config.consumer_secret &&
+      this.config.access_token_key &&
+      this.config.access_token_secret
     ) {
       this.client = new TwitterAPI({
-        consumer_key: this.consumer_key,
-        consumer_secret: this.consumer_secret,
-        access_token_key: this.access_token_key,
-        access_token_secret: this.access_token_secret,
+        consumer_key: this.config.consumer_key,
+        consumer_secret: this.config.consumer_secret,
+        access_token_key: this.config.access_token_key,
+        access_token_secret: this.config.access_token_secret,
       });
 
       this.feedCompleteCall = async (feedEvent) => {
@@ -55,7 +37,7 @@ class Twitter extends Library {
   }
 
   async sendTweet(feedEvent) {
-    var message = this.message_format;
+    var message = this.config.message_format;
 
     for (const key in feedEvent.dataValues) {
       if (Object.hasOwnProperty.call(feedEvent.dataValues, key)) {
@@ -64,7 +46,7 @@ class Twitter extends Library {
       }
     }
 
-    message = message.replace("{feeder_name}", this.feeder_name);
+    message = message.replace("{feeder_name}", this.config.feeder_name);
 
     this.logger.info("Sending tweet: " + message);
 

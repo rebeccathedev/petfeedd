@@ -99,6 +99,9 @@ class REST {
 
           data.save();
           ret.push(data);
+        } else {
+          let data = await Model.create(obj);
+          ret.push(data);
         }
       }
     }

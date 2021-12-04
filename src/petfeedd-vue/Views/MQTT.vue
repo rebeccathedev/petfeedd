@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col">
         <div class="form-check my-2">
-          <input class="form-check-input" type="checkbox" value="1" id="mqtt.enable" v-model="mqtt.enable.value">
+          <input class="form-check-input" type="checkbox" value="1" id="mqtt.enable" v-model="mqtt.enable">
           <label class="form-check-label" for="mqtt.enable">
             Enable MQTT Support
           </label>
@@ -16,11 +16,11 @@
       </div>
     </div>
 
-    <div v-if="mqtt.enable.value">
+    <div v-if="mqtt.enable">
       <div class="row">
         <div class="col mt-2 mb-4">
           <label for="mqtt.server" class="form-label">MQTT Server</label>
-          <input type="text" class="form-control" id="mqtt.server" placeholder="mqtt://example.com" v-model="mqtt.server.value">
+          <input type="text" class="form-control" id="mqtt.server" placeholder="mqtt://example.com" v-model="mqtt.server">
         </div>
       </div>
 
@@ -29,7 +29,7 @@
       <div class="row">
         <div class="col mt-2 mb-4">
           <label for="mqtt.broadcast_event" class="form-label">Broadcast Feed Event Name</label>
-          <input type="text" class="form-control" id="mqtt.broadcast_event" placeholder="home/petfeedd/feed" v-model="mqtt.broadcast_event.value">
+          <input type="text" class="form-control" id="mqtt.broadcast_event" placeholder="home/petfeedd/feed" v-model="mqtt.broadcast_event">
         </div>
       </div>
 
@@ -76,11 +76,7 @@
 </template>
 
 <script>
-import SettingTransformer from "../Mixins/SettingTransformer";
-import SaveSettings from "../Mixins/SaveSettings";
-
 export default {
-  mixins: [SettingTransformer, SaveSettings],
   methods: {
     addListen() {
       this.mqttEvents.push({
@@ -105,33 +101,19 @@ export default {
         }
       });
 
-      this.mqttEvents.forEach(async (mqtt)  => {
-        if (mqtt.id) {
-          await this.$http({
-            url: "/api/mqtt/" + mqtt.id,
-            method: "PUT",
-            data: mqtt
-          });
-        } else {
-          await this.$http({
-            url: "/api/mqtt",
-            method: "POST",
-            data: mqtt
-          });
-        }
+      this.$http({
+        url: "/api/mqtt",
+        method: "PUT",
+        data: this.mqttEvents
       });
 
-      this.saveSettings({mqtt: this.mqtt});
+      this.saveSettings();
     }
   },
 
   data() {
     return {
-      mqtt: {
-        enable: {},
-        server: {},
-        broadcast_event: {}
-      },
+      mqtt: {},
       mqttEvents: [],
       mqttEventsToDelete: [],
       servos: [],
@@ -141,18 +123,7 @@ export default {
   mounted() {
     this.$parent.$on("config.save", this.save);
 
-    this.$http({
-      url: "/api/settings",
-      method: "GET",
-      params: {
-        namespace: "mqtt"
-      }
-    }).then(response => {
-      response.data.forEach(setting => {
-        this.transformSettings(setting);
-        this.$set(this.mqtt, setting.key, setting);
-      });
-    });
+    this.loadSettings("mqtt");
 
     this.$http({
       url: "/api/mqtt",

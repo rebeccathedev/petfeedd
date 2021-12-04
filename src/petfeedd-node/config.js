@@ -2,6 +2,7 @@ const commandLineArgs = require("command-line-args");
 const fs = require("fs");
 const ini = require("ini");
 const log4js = require("log4js");
+const { boolean } = require('boolean');
 
 let logger = log4js.getLogger("Config");
 logger.level = "debug";
@@ -90,6 +91,35 @@ class Config {
 
   initalizeDatabaseConfig(database) {
     this.database = database;
+  }
+
+  async getConfigEntries(namespace) {
+    let Setting = this.database.modelFactory("Setting");
+    let settings = await Setting.findAll({
+      where: {
+        namespace: namespace
+      }
+    });
+
+    let retSettings = {};
+
+    for (const setting of settings) {
+      switch (setting.type) {
+        case "bool":
+          retSettings[setting.key] = boolean(setting.value);
+          break;
+
+        case "number":
+        case "int":
+          retSettings[setting.key] = parseInt(setting.value);
+          break;
+
+        default:
+          retSettings[setting.key] = setting.value;
+      }
+    }
+
+    return retSettings;
   }
 
   async getConfigEntry(namespace, key) {

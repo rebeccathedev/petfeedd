@@ -61,23 +61,13 @@ export default {
         }
       });
 
-      this.buttons.forEach(async (button) => {
-        if (button.id) {
-          await this.$http({
-            url: "/api/buttons/" + button.id,
-            method: "PUT",
-            data: button
-          });
-        } else {
-          await this.$http({
-            url: "/api/buttons",
-            method: "POST",
-            data: button
-          });
-        }
+      this.$http({
+        url: "/api/buttons",
+        method: "PUT",
+        data: this.buttons
       });
 
-      this.$toast.open('buttons saved.');
+      this.$toast.open('Buttons saved.');
     }
   },
   data() {

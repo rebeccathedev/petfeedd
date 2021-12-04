@@ -51,7 +51,9 @@ class Scheduler extends Library {
     this.logger.info("Running a feed: " + feed.name);
     bus.emit('feed', {
       pin: servo.pin,
-      time: servo.feed_time * feed.size
+      time: servo.feed_time,
+      size: feed.size,
+      name: feed.name
     });
 
     this.logger.info("Next time feed " + feed.name + ": " + job.nextInvocation());

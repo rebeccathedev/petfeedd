@@ -3,15 +3,15 @@
     <div class="row">
       <div class="form-group col">
         <label for="general.name">Name</label>
-        <input class="form-control" type="input" name="general.name" v-model="setting.general.name.value">
+        <input class="form-control" type="input" name="general.name" v-model="general.name">
       </div>
     </div>
 
     <div class="row">
       <div class="col">
         <div class="form-check my-2">
-          <input class="form-check-input" type="checkbox" value="1" id="mqtt.enable" v-model="setting.bonjour.enable.value">
-          <label class="form-check-label" for="mqtt.enable">
+          <input class="form-check-input" type="checkbox" value="1" id="bonjour.enable" v-model="bonjour.enable">
+          <label class="form-check-label" for="bonjour.enable">
             Enable Zeroconf/Bonjour Service Discovery
           </label>
         </div>
@@ -28,49 +28,20 @@ export default {
 
   methods: {
     save() {
-      for (const ns in this.setting) {
-        for (const setting_name in this.setting[ns]) {
-          var setting = this.setting[ns][setting_name];
-          this.$http({
-            url: "/api/settings/" + setting.id,
-            method: "PUT",
-            data: setting
-          });
-        }
-      }
+      this.saveSettings();
     }
   },
 
   data() {
     return {
-      setting: {
-        bonjour: {
-          enable: {}
-        },
-        general: {
-          name: {}
-        }
-      }
+      bonjour: {},
+      general: {}
     }
   },
 
   mounted() {
     this.$parent.$on("config.save", this.save);
-
-    ["general", "bonjour"].forEach(ns => {
-      this.$http({
-        url: "/api/settings",
-        method: "GET",
-        params: {
-          namespace: ns
-        }
-      }).then(response => {
-        response.data.forEach(setting => {
-          this.transformSettings(setting);
-          this.$set(this.setting[ns], setting.key, setting);
-        });
-      });
-    });
+    this.loadSettings(["bonjour", "general"]);
   },
 
   beforeDestroy() {
