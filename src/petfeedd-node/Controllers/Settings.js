@@ -5,7 +5,7 @@ class Settings extends REST {
   model = "Setting";
 
   async bulkUpdate(request, response) {
-    response = super.bulkUpdate(request, response);
+    response = await super.bulkUpdate(request, response);
 
     if (Array.isArray(request.body)) {
       let namespaces = [...new Set(
