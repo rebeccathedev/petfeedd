@@ -44,6 +44,11 @@ class Database {
   modelFactory(model) {
     return this.models[model];
   }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
+    await this.sequelize.close();
+  }
 }
 
 module.exports = new Database

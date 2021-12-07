@@ -11,6 +11,7 @@ class Twitter extends Library {
   }
 
   async run() {
+    this.logger.info("Starting up.");
     this.config = await config.getConfigEntries("twitter");
     this.feeder_name = await config.getConfigEntry("general", "name");
 
@@ -63,13 +64,15 @@ class Twitter extends Library {
 
   async reload() {
     this.logger.info("Reloading");
-    bus.removeListener("feed.completed", this.feedCompleteCall);
-    this.run();
+    await this.shutdown();
+    await this.run();
   }
 
   async shutdown() {
     this.logger.info("Shutting down.");
-    bus.removeListener("feed.completed", this.feedCompleteCall);
+    if (this.feedCompleteCall) {
+      bus.removeListener("feed.completed", this.feedCompleteCall);
+    }
   }
 }
 

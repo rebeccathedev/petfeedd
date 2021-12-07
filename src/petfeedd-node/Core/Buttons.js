@@ -10,8 +10,7 @@ class Buttons extends Library {
   }
 
   async run() {
-    this.logger.info("Starting Buttons.");
-
+    this.logger.info("Starting up.");
     let Button = this.database.modelFactory("Button");
     let Servo = this.database.modelFactory("Servo");
     let buttons = await Button.findAll();
@@ -49,11 +48,16 @@ class Buttons extends Library {
   }
 
   async reload() {
-    this.logger.info("Reloading Buttons.");
+    this.logger.info("Reloading.");
+    this.shutdown();
+    this.run();
+  }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
     for (const button of this.buttons) {
       button.gpio.off("interrupt");
     }
-    this.run();
   }
 }
 

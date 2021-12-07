@@ -13,7 +13,7 @@ class Scheduler extends Library {
   }
 
   async run() {
-    this.logger.info("Scheduling jobs.");
+    this.logger.info("Starting up.");
     let Feed = this.database.modelFactory("Feed");
     let feeds = await Feed.findAll();
 
@@ -69,8 +69,14 @@ class Scheduler extends Library {
   }
 
   async reload() {
-    this.cancelAllJobs();
+    this.logger.info("Reloading.");
+    this.shutdown();
     this.run();
+  }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
+    this.cancelAllJobs();
   }
 }
 

@@ -73,8 +73,8 @@ class Web extends Library {
   }
 
   async run() {
-    this.logger.info("Starting web interface.");
-    this.app.listen(8080, () => {
+    this.logger.info("Starting up.");
+    this.server = this.app.listen(8080, () => {
       this.logger.info(`petfeedd listening at http://localhost:8080`);
     });
   }
@@ -88,6 +88,11 @@ class Web extends Library {
         next(e)
       }
     }
+  }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
+    await this.server.close();
   }
 }
 

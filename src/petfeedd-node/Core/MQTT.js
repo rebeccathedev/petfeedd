@@ -11,7 +11,7 @@ class MQTT extends Library {
   }
 
   async run() {
-    this.logger.info("Starting MQTT.");
+    this.logger.info("Starting up.");
     const Setting = this.database.modelFactory("Setting");
     const MQTTModel = this.database.modelFactory("MQTT");
     const Servo = this.database.modelFactory("Servo");
@@ -72,9 +72,14 @@ class MQTT extends Library {
   }
 
   async reload() {
-    this.logger.info("Reloading MQTT.");
-    this.client.end();
+    this.logger.info("Reloading.");
+    await this.shutdown();
     this.run();
+  }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
+    await this.client.end();
   }
 }
 
