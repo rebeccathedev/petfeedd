@@ -16,9 +16,11 @@
         <div class="collapse d-md-block" id="configNavCollapse" ref="configNavCollapse">
           <nav class="nav nav-pills flex-column mt-md-5 mb-3">
             <router-link :to="{name: 'config.general'}" class="nav-link">General</router-link>
+            <h6 class="nav-section-header">Core</h6>
             <router-link :to="{name: 'config.feeds'}" class="nav-link">Feeds</router-link>
             <router-link :to="{name: 'config.servos'}" class="nav-link">Servos</router-link>
             <router-link :to="{name: 'config.buttons'}" class="nav-link">Buttons</router-link>
+            <h6 class="nav-section-header">Notifications</h6>
             <router-link :to="{name: 'config.mqtt'}" class="nav-link">MQTT</router-link>
             <router-link :to="{name: 'config.email'}" class="nav-link">Email</router-link>
             <router-link :to="{name: 'config.twitter'}" class="nav-link">Twitter</router-link>
@@ -70,5 +72,11 @@ export default {
 </script>
 
 <style>
-
+.nav-section-header {
+  display: block;
+  padding: .5rem 1rem;
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-light-rgb),var(--bs-bg-opacity)) !important;
+  margin: 1rem 0 0 0;
+}
 </style>
