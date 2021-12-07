@@ -13,8 +13,9 @@ class Feeder extends Library {
   }
 
   async run() {
-    this.logger.info("Listening for feeds.");
-    bus.on("feed", (...args) => this.feed(...args));
+    this.logger.info("Starting up.");
+    this.feedFunc = (...args) => this.feed(...args);
+    bus.on("feed", this.feedFunc);
   }
 
   async feed(feedData) {
@@ -23,6 +24,8 @@ class Feeder extends Library {
       this.logger.warning("Avoiding a feed because we are paused.");
       return;
     }
+
+    var feedSuccessful = false;
 
     try {
       let motor = new Gpio(feedData.pin, {
@@ -33,9 +36,13 @@ class Feeder extends Library {
       await sleep(feedData.time * feedData.size * 1000);
       motor.servoWrite(0);
 
-      mqtt.publish(feedData.size);
+      feedSuccessful = true;
     } catch (error) {
       this.logger.error("Could not enable GPIO.");
+    }
+
+    if (feedSuccessful) {
+      mqtt.publish(feedData.size);
     }
 
     var feedName = feedData.name || "Received";
@@ -53,12 +60,27 @@ class Feeder extends Library {
       feedName += " (On Demand)";
     }
 
+    if (!feedSuccessful) {
+      feedName += " (Unsuccessful)";
+    }
+
     let f = await FeedEvent.create({
       name: feedName,
       size: feedData.size,
     });
 
     bus.emit("feed.completed", f);
+  }
+
+  async reload() {
+    this.logger.info("Reloading.");
+    this.shutdown()
+    this.run()
+  }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
+    bus.on("off", this.feedFunc);
   }
 }
 

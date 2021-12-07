@@ -15,7 +15,7 @@ class Email extends Library {
   }
 
   async run() {
-    this.logger.info("Starting");
+    this.logger.info("Starting up.");
 
     this.config = await config.getConfigEntries("email");
 
@@ -70,15 +70,12 @@ class Email extends Library {
 
   async reload() {
     this.logger.info("Reloading");
-    if (this.feedCompleteCall) {
-      bus.removeListener("feed.completed", this.feedCompleteCall);
-      bus.removeListener("email.test", this.feedCompleteCall);
-    }
+    this.shutdown();
     this.run();
   }
 
   async shutdown() {
-    this.logger.info("Stopping");
+    this.logger.info("Shutting down.");
     if (this.feedCompleteCall) {
       bus.removeListener("feed.completed", this.feedCompleteCall);
       bus.removeListener("email.test", this.feedCompleteCall);

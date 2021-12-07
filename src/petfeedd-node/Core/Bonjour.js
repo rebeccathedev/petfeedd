@@ -11,7 +11,7 @@ class Bonjour extends Library {
   }
 
   async run() {
-    this.logger.info("Starting Bonjour/Zeroconf.");
+    this.logger.info("Starting up.");
 
     let port = parseInt(await config.getConfigEntry("web", "bind_port"));
     let name = await config.getConfigEntry("general", "name");
@@ -27,9 +27,14 @@ class Bonjour extends Library {
   }
 
   async reload() {
-    this.logger.info("Reloading Bonjour/Zeroconf.");
-    this.service.stop();
+    this.logger.info("Reloading.");
+    this.shutdown();
     this.run();
+  }
+
+  async shutdown() {
+    this.logger.info("Shutting down.");
+    this.service.stop();
   }
 }
 
