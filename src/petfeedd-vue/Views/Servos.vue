@@ -3,6 +3,12 @@
     <portal to="toolbar">
       <button class="btn btn-primary" @click="addServo()">Add Servo</button>
     </portal>
+    <p>petfeedd supports multiple servos. If you are powering your servos
+      directly from your board's power supply (such as using the 5V or 3.3V pins
+      on a Raspberry Pi) you should offset feeds by a second or so per server to
+      avoid voltage drop issues that could destabilise your feeder, or use
+      external power for your servos.
+    </p>
     <div class="servo mb-2 card" v-for="servo in servos" :key="servo.id">
       <div class="card-body">
         <div class="row">

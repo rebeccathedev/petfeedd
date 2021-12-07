@@ -60,7 +60,7 @@ const routes = [
       },
       {
         path: "feeds",
-        meta: { title: "Feeds" },
+        meta: { title: "Scheduled Feeds" },
         component: Feeds,
         name: "config.feeds",
       },
