@@ -1,6 +1,6 @@
 const bus = require("../event-bus");
 const Gpio = require("pigpio").Gpio;
-const mqtt = require("../Core/mqtt");
+const mqtt = require("../Core/MQTT");
 const config = require("../config");
 const database = require("../database");
 
