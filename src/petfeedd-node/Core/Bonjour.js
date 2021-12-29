@@ -26,12 +26,6 @@ class Bonjour extends Library {
     this.service.start();
   }
 
-  async reload() {
-    this.logger.info("Reloading.");
-    this.shutdown();
-    this.run();
-  }
-
   async shutdown() {
     this.logger.info("Shutting down.");
     this.service.stop();

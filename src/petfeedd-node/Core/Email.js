@@ -68,12 +68,6 @@ class Email extends Library {
     this.logger.info("Message sent: %s", info.messageId);
   }
 
-  async reload() {
-    this.logger.info("Reloading");
-    this.shutdown();
-    this.run();
-  }
-
   async shutdown() {
     this.logger.info("Shutting down.");
     if (this.feedCompleteCall) {

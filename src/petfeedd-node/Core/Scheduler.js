@@ -68,12 +68,6 @@ class Scheduler extends Library {
     this.jobs = [];
   }
 
-  async reload() {
-    this.logger.info("Reloading.");
-    this.shutdown();
-    this.run();
-  }
-
   async shutdown() {
     this.logger.info("Shutting down.");
     this.cancelAllJobs();

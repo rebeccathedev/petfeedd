@@ -20,6 +20,7 @@
             <router-link :to="{name: 'config.feeds'}" class="nav-link">Feeds</router-link>
             <router-link :to="{name: 'config.servos'}" class="nav-link">Servos</router-link>
             <router-link :to="{name: 'config.buttons'}" class="nav-link">Buttons</router-link>
+            <router-link :to="{name: 'config.sounds'}" class="nav-link">Sounds</router-link>
             <h6 class="nav-section-header">Notifications</h6>
             <router-link :to="{name: 'config.mqtt'}" class="nav-link">MQTT</router-link>
             <router-link :to="{name: 'config.email'}" class="nav-link">Email</router-link>

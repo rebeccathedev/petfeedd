@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const database = require("../database");
+const fileUpload = require('express-fileupload');
 const bus = require("../event-bus");
 
 const MQTT = require("../Controllers/MQTT");
@@ -10,6 +11,7 @@ const Servos = require("../Controllers/Servos");
 const Feeds = require("../Controllers/Feeds");
 const FeedEvents = require("../Controllers/FeedEvents");
 const Buttons = require("../Controllers/Buttons");
+const Sounds = require("../Controllers/Sounds");
 const Util = require("../Controllers/Util");
 
 const Library = require("./Library");
@@ -19,6 +21,11 @@ class Web extends Library {
     super();
     this.database = database;
     this.app = express();
+
+    this.app.use(fileUpload({
+      createParentPath: true
+    }));
+
     this.app.use(bodyParser.json());
 
     this.app.use(function(err, req, res, next) {
@@ -46,11 +53,14 @@ class Web extends Library {
     this.buildCrud(apiRouter, "mqtt", new MQTT(database));
     this.buildCrud(apiRouter, "settings", new Settings(database));
     this.buildCrud(apiRouter, "buttons", new Buttons(database));
+    this.buildCrud(apiRouter, "sounds", new Sounds(database));
 
     // Build the util routes
     let util = new Util(database);
     apiRouter.get("/util/emailtest", this.wrapper(util, "testEmail"));
+    apiRouter.get("/util/reload", this.wrapper(util, "reload"));
     apiRouter.get("/util/reload/:type", this.wrapper(util, "reloadCore"));
+    apiRouter.get("/util/shutdown", this.wrapper(util, "shutdown"));
   }
 
   buildCrud(apiRouter, path, controller) {

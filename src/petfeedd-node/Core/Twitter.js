@@ -62,12 +62,6 @@ class Twitter extends Library {
     );
   }
 
-  async reload() {
-    this.logger.info("Reloading");
-    await this.shutdown();
-    await this.run();
-  }
-
   async shutdown() {
     this.logger.info("Shutting down.");
     if (this.feedCompleteCall) {
