@@ -4,11 +4,11 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    main: "./src/petfeedd-vue/index.js",
+    main: "/usr/src/petfeedd-vue/index.js",
   },
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "build/src/public"),
+    path: "/usr/src/app/public",
     clean: true,
   },
   module: {

@@ -73,7 +73,9 @@ class MQTT extends Library {
 
   async shutdown() {
     this.logger.info("Shutting down.");
-    await this.client.end();
+    if (this.client) {
+      await this.client.end();
+    }
   }
 }
 
