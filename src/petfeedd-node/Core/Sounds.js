@@ -35,9 +35,12 @@ class Sounds extends Library {
   async shutdown() {
     this.logger.info("Shutting down.");
 
-    for (const event of this.calls) {
-      for (const f of this.calls[event]) {
-        bus.off(event, f);
+    for (const event in this.calls) {
+      if (Object.hasOwnProperty.call(this.calls, event)) {
+        const functions = this.calls[event];
+        for (const f of functions) {
+          bus.removeListener(event, f);
+        }
       }
     }
   }
