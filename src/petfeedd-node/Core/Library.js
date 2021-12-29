@@ -7,7 +7,13 @@ class Library {
   }
 
   async run() {}
-  async reload() {}
+
+  async reload() {
+    this.logger.info("Reloading.");
+    await this.shutdown();
+    await this.run();
+  }
+
   async shutdown() {}
 }
 

@@ -2,7 +2,6 @@ var glob = require("glob");
 
 module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-shell");
-  grunt.loadNpmTasks("grunt-sass");
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-webpack");
 

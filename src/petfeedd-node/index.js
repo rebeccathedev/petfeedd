@@ -58,8 +58,8 @@ process.stdin.resume();
   });
 
   // This handles gracefully shutting down.
-  async function handle(signal) {
-    logger.info(`Received ${signal}. Shutting down.`);
+  async function shutdown(signal) {
+    logger.info(`Shutting down.`);
     for (const instance of instances) {
       await instance.shutdown();
     }
@@ -68,17 +68,22 @@ process.stdin.resume();
     process.exit(0);
   }
 
-  // Check signals for shutdown.
-  process.on('SIGINT', handle);
-  process.on('SIGTERM', handle);
-
-  // Sighup should force a reload.
-  process.on('SIGHUP', async (signal) => {
+  // This handles reloading the running config.
+  async function reload(signal) {
     logger.info(`Received ${signal}. Reloading.`);
     for (const instance of instances) {
       if (instance.reload) {
         await instance.reload();
       }
     }
-  });
+  }
+
+  // Check signals for shutdown and reload.
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+  process.on('SIGHUP', reload);
+
+  // Check bus for shutdown and reload.
+  bus.on("reload", reload);
+  bus.on("shutdown", shutdown);
 })();

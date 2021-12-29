@@ -47,12 +47,6 @@ class Buttons extends Library {
     }
   }
 
-  async reload() {
-    this.logger.info("Reloading.");
-    this.shutdown();
-    this.run();
-  }
-
   async shutdown() {
     this.logger.info("Shutting down.");
     for (const button of this.buttons) {

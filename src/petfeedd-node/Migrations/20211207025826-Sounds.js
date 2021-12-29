@@ -4,7 +4,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return await queryInterface.createTable("buttons", {
+    return await queryInterface.createTable("sounds", {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -19,23 +19,18 @@ module.exports = {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      pin: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
+      sound: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      servo_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      default_feed_size: {
-        type: DataTypes.INTEGER,
+      event: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('buttons');
+    await queryInterface.dropTable('sounds');
   }
 };

@@ -9,6 +9,16 @@ class Util {
     return response.status(200).send();
   }
 
+  reload(request, response) {
+    bus.emit("reload");
+    return response.status(200).send();
+  }
+
+  shutdown(request, response) {
+    bus.emit("shutdown");
+    return response.status(200).send();
+  }
+
   reloadCore(request, response) {
     let type = request.params.type;
     bus.emit(type + ".reload");

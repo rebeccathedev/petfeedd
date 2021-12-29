@@ -39,6 +39,7 @@ const Servos = () => import("./Views/Servos.vue");
 const MQTT = () => import("./Views/MQTT.vue");
 const General = () => import("./Views/General.vue");
 const Buttons = () => import("./Views/Buttons.vue");
+const Sounds = () => import("./Views/Sounds.vue");
 const Email = () => import("./Views/Email.vue");
 const Twitter = () => import("./Views/Twitter.vue");
 
@@ -81,6 +82,12 @@ const routes = [
         meta: { title: "Buttons" },
         component: Buttons,
         name: "config.buttons",
+      },
+      {
+        path: "sounds",
+        meta: { title: "Sounds" },
+        component: Sounds,
+        name: "config.sounds",
       },
       {
         path: "email",

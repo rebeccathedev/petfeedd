@@ -20,6 +20,7 @@ class Database {
       "Servo": require("./Models/Servo"),
       "MQTT": require("./Models/MQTT"),
       "Button": require("./Models/Button"),
+      "Sound": require("./Models/Sound"),
     }
   }
 

@@ -69,13 +69,11 @@ class Feeder extends Library {
       size: feedData.size,
     });
 
-    bus.emit("feed.completed", f);
-  }
-
-  async reload() {
-    this.logger.info("Reloading.");
-    this.shutdown()
-    this.run()
+    if (feedSuccessful) {
+      bus.emit("feed.completed", f);
+    } else {
+      bus.emit("feed.failed", f);
+    }
   }
 
   async shutdown() {

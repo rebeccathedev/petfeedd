@@ -1,9 +1,16 @@
+const bus = require("../event-bus");
+
 class REST {
   model = "";
   primaryKey = "id";
+  namespace = "";
 
   constructor(database) {
     this.database = database;
+
+    if (!this.namespace) {
+      this.namespace = this.constructor.name.toLowerCase();
+    }
   }
 
   getAdditionalRoutes() {
@@ -57,6 +64,7 @@ class REST {
   async create(request, response) {
     let Model = this.database.modelFactory(this.model);
     let data = await Model.create(request.body);
+    bus.emit(this.namespace + ".reload");
     return response.send(data);
   }
 
@@ -76,6 +84,8 @@ class REST {
     }
 
     data.save();
+
+    bus.emit(this.namespace + ".reload");
 
     return response.send(data);
   }
@@ -106,6 +116,8 @@ class REST {
       }
     }
 
+    bus.emit(this.namespace + ".reload");
+
     return response.send(data);
   }
 
@@ -118,6 +130,7 @@ class REST {
     }
 
     data.destroy();
+    bus.emit(this.namespace + ".reload");
     return response.send(data);
   }
 }
