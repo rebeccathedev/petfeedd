@@ -29,7 +29,7 @@
         </div>
         <div class="row mt-2">
           <div class="col-lg-12">
-            <button class="btn btn-danger" v-on:click='deleteSound()'>Delete</button>
+            <button class="btn btn-danger" v-on:click='deleteSound(sound)'>Delete</button>
           </div>
         </div>
       </div>
@@ -51,7 +51,21 @@ export default {
       sound.file = event.target;
     },
 
+    deleteSound(sound) {
+      this.soundsToDelete.push(sound);
+      this.sounds.splice(this.sounds.indexOf(sound), 1);
+    },
+
     save() {
+      this.soundsToDelete.forEach(async (sound) => {
+        if (sound.id) {
+          await this.$http({
+            url: "/api/sounds/" + sound.id,
+            method: "DELETE"
+          });
+        }
+      });
+
       let formData = new FormData();
 
       for (const i in this.sounds) {
@@ -78,6 +92,7 @@ export default {
 
   data() {
     return {
+      soundsToDelete: [],
       sounds: []
     }
   },
