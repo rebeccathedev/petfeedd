@@ -6,8 +6,7 @@ After=network.target
 User=root
 Restart=always
 Type=simple
-WorkingDirectory=/opt/petfeedd
-ExecStart=/usr/local/bin/pipenv run python3 /opt/petfeedd/src/__main__.py
+ExecStart=/usr/local/bin/node /opt/petfeedd/build/index.js
 
 [Install]
 WantedBy=multi-user.target
