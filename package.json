@@ -42,6 +42,7 @@
     "twitter": "^1.7.1",
     "umzug": "^2.3.0",
     "vue": "^2.5.22",
+    "vue-form-wizard": "^0.8.4",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.2",
     "vue-toast-notification": "^0.6.2"
@@ -55,6 +56,7 @@
     "babel-loader": "^8.2.3",
     "caniuse-lite": "^1.0.30001294",
     "clean-css": "^5.2.2",
+    "copy-webpack-plugin": "^10.2.0",
     "css-loader": "^6.5.1",
     "file-loader": "^6.2.0",
     "glob": "^7.2.0",
@@ -68,6 +70,7 @@
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.64.2",
     "webpack-cli": "^4.9.1",
+    "webpack-merge": "^5.8.0",
     "yargs": "^12.0.5"
   },
   "browserslist": [
