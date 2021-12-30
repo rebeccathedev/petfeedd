@@ -42,11 +42,13 @@ const Buttons = () => import("./Views/Buttons.vue");
 const Sounds = () => import("./Views/Sounds.vue");
 const Email = () => import("./Views/Email.vue");
 const Twitter = () => import("./Views/Twitter.vue");
+const Onboard = () => import("./Views/Onboard.vue");
 
 // Create the routes.
 const routes = [
   { path: "/", redirect: { name: "home" } },
   { path: "/home", component: Home, name: "home" },
+  { path: "/onboard", component: Onboard, name: "onboard" },
   {
     path: "/configuration",
     component: Configuration,
