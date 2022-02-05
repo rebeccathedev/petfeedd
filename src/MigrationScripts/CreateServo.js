@@ -3,7 +3,7 @@ const MigrationScript = require("./MigrationScript");
 class CreateServo extends MigrationScript {
   async migrate() {
     let Servo = this.database.modelFactory("Servo");
-    if (await Servo.count() == 0) {
+    if (await Servo.count() == 0 && this.config.gpio) {
       this.logger.info("Migrating from config to database servo control.");
       Servo.create({
         name: "Default",

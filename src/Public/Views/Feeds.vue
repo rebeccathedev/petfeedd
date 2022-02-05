@@ -8,7 +8,7 @@
         <div class="row">
           <div class="form-group col-lg-7 col-md-6">
             <label for="feed.name">Name</label>
-            <input class="form-control" type="input" name="feed.name" value="1" step="1" v-model="feed.name">
+            <input class="form-control" type="input" name="feed.name" v-model="feed.name">
           </div>
 
           <div class="form-group col-lg-2 col-md-6">

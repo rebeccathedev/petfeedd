@@ -1,16 +1,14 @@
 FROM alpine:3.15
-COPY ./src/petfeedd-node/ /usr/src/app/
-COPY ./src/petfeedd-vue /usr/src/petfeedd-vue
-COPY ./package* /usr/src
-COPY ./webpack.config.js /usr/src/webpack.config.js
-COPY ./babel.config.js /usr/src/babel.config.js
-WORKDIR /usr/src
-RUN apk add --update nodejs-lts npm python3 make g++
-RUN npm ci
-RUN npx webpack
-RUN rm -rf /usr/src/petfeedd-vue \
-        /usr/src/webpack.config.js \
-        /usr/src/babel.config.js \
+COPY ./src/ /usr/src/petfeedd/src/
+COPY ./package* /usr/src/petfeedd
+COPY ./*.config.js /usr/src/petfeedd
+WORKDIR /usr/src/petfeedd
+RUN apk add --update nodejs-lts npm python3 make g++ && \
+    npm ci && \
+    npx webpack && \
+    mv output /usr/src/app && \
+    mv node_modules /usr/src/app/ && \
+    rm -rf /usr/src/petfeedd && \
     apk del python3 make g++
 EXPOSE 8080
 WORKDIR /usr/src/app

@@ -14,7 +14,7 @@
         <div class="row">
           <div class="form-group col-lg-9 col-md-12">
             <label for="servo.name">Name</label>
-            <input class="form-control" type="input" name="servo.name" value="1" step="1" v-model="servo.name">
+            <input class="form-control" type="input" name="servo.name" v-model="servo.name">
           </div>
 
           <div class="form-group col-lg-2 col-md-6 mt-2 mt-lg-0">
