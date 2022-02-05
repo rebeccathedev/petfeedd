@@ -10,6 +10,7 @@
   "license": "GPLv3",
   "dependencies": {
     "@babel/runtime": "^7.16.3",
+    "@popperjs/core": "^2.11.2",
     "@vue/cli": "^4.5.15",
     "axios": "^0.24.0",
     "body-parser": "^1.19.1",
