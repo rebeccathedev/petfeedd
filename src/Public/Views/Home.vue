@@ -65,6 +65,22 @@ export default {
       }).then(response => {
         this.events = response.data;
       });
+    },
+
+    async checkForOnboarding() {
+      let feedData = await this.$http({
+        url: "/api/feeds",
+        method: "GET"
+      });
+
+      let servoData = await this.$http({
+        url: "/api/servos",
+        method: "GET"
+      });
+
+      if (feedData.data.length == 0 && servoData.data.length == 0) {
+        this.$router.push({ name: 'onboard' });
+      }
     }
   },
 
@@ -76,6 +92,7 @@ export default {
   },
 
   mounted() {
+    this.checkForOnboarding();
     this.getEvents();
 
     this.$http({

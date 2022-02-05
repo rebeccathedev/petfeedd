@@ -22,11 +22,6 @@ class Config {
       bind_port: 8080,
     },
 
-    gpio: {
-      servo_pin: 17,
-      servo_feed_time: 0.25,
-    },
-
     logging: {
       enabled: 1,
       method: "stdout",

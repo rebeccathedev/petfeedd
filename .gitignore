@@ -1,7 +1,7 @@
 *.db
-**/__pycache__/*
 node_modules
-petfeedd.conf
+petfeedd.*conf
 **.log
 .vscode
 build
+output

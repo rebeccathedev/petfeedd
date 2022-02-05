@@ -1,14 +1,16 @@
 const { VueLoaderPlugin } = require("vue-loader");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = {
   entry: {
-    main: "/usr/src/petfeedd-vue/index.js",
+    main: path.join(__dirname, "src/Public/index.js"),
   },
   output: {
     filename: "[name].bundle.js",
-    path: "/usr/src/app/public",
+    path: path.join(__dirname, "output/public"),
     clean: true,
   },
   module: {
@@ -43,6 +45,24 @@ module.exports = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [
+        path.join(__dirname, "output")
+      ],
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, "src"),
+          to: path.join(__dirname, "output"),
+          filter: async (resourcePath) => resourcePath.match("Public") == null
+        },
+        {
+          from: path.join(__dirname, "package*"),
+          to: path.join(__dirname, "output"),
+        },
+      ],
+    }),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       title: "petfeedd"
