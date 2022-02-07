@@ -45,7 +45,7 @@ class Feeds extends REST {
     var servo = await Servo.findByPk(feed.servo_id);
 
     bus.emit("feed", {
-      pin: feed.pin,
+      pin: servo.pin,
       time: servo.feed_time,
       size: feed.size,
       feed: feed,

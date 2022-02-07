@@ -3,6 +3,7 @@ const Gpio = require("pigpio").Gpio;
 const mqtt = require("../Core/MQTT");
 const config = require("../config");
 const database = require("../database");
+const sleep = require('sleepjs').sleep;
 
 const Library = require("./Library");
 
@@ -27,6 +28,8 @@ class Feeder extends Library {
 
     var feedSuccessful = false;
 
+    this.logger.info("Attempting a feed.");
+
     try {
       let motor = new Gpio(feedData.pin, {
         mode: Gpio.OUTPUT,
@@ -39,9 +42,11 @@ class Feeder extends Library {
       feedSuccessful = true;
     } catch (error) {
       this.logger.error("Could not enable GPIO.");
+      this.logger.error(error);
     }
 
     if (feedSuccessful) {
+      this.logger.info("Feed successfully executed.");
       mqtt.publish(feedData.size);
     }
 
