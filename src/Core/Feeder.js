@@ -89,7 +89,13 @@ class Feeder extends Library {
 
   async shutdown() {
     this.logger.info("Shutting down.");
-    terminate();
+    try {
+      terminate();
+    } catch (error) {
+      this.logger.error("Could not terminate GPIO.");
+      this.logger.error(error);
+    }
+
     bus.on("off", this.feedFunc);
   }
 }

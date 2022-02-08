@@ -1,6 +1,6 @@
 module.exports = {
   scripts: {
-    "CreateServo": require("./CreateServo"),
+    "MigrateConfigSettings": require("./MigrateConfigSettings"),
     "CreateDefaultSettings": require("./CreateDefaultSettings"),
   },
 
