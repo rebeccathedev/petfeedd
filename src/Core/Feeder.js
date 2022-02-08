@@ -1,5 +1,6 @@
 const bus = require("../event-bus");
 const Gpio = require("pigpio").Gpio;
+const terminate = require("pigpio").terminate;
 const mqtt = require("../Core/MQTT");
 const config = require("../config");
 const database = require("../database");
@@ -11,6 +12,7 @@ class Feeder extends Library {
   constructor(database) {
     super();
     this.database = database;
+    this.gpios = {};
   }
 
   async run() {
@@ -31,9 +33,13 @@ class Feeder extends Library {
     this.logger.info("Attempting a feed.");
 
     try {
-      let motor = new Gpio(feedData.pin, {
-        mode: Gpio.OUTPUT,
-      });
+      if (!this.gpios[feedData.pin]) {
+        this.gpios[feedData.pin] = new Gpio(feedData.pin, {
+          mode: Gpio.OUTPUT,
+        });
+      }
+
+      let motor = this.gpios[feedData.pin];
 
       motor.servoWrite(2500);
       await sleep(feedData.time * feedData.size * 1000);
@@ -83,6 +89,7 @@ class Feeder extends Library {
 
   async shutdown() {
     this.logger.info("Shutting down.");
+    terminate();
     bus.on("off", this.feedFunc);
   }
 }
