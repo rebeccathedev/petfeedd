@@ -54,7 +54,7 @@ definitely the way to go. The only other reason you might want to do this is if
 you are using an old or underpowered device (like a Pi Zero or a
 first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
-1. `apt-get install git`
+1. `apt-get install -y git pigpio libpigpio1`
 
 2. `curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - && sudo apt-get install -y nodejs`
 
@@ -72,9 +72,13 @@ first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
 11. `cp init/systemd/petfeedd.service /etc/systemd/system`
 
-12. `systemctl daemon-reload`
+12. `touch /opt/petfeedd.db`
 
-13. `systemctl start petfeedd`
+13. `chown -R petfeedd: /opt/petfeedd*`
+
+14. `systemctl daemon-reload`
+
+15. `systemctl start petfeedd`
 
 ## Updating
 

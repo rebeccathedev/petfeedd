@@ -7,13 +7,13 @@ logger.level = "debug";
 
 logger.info("petfeedd is starting up. :)");
 
-// Load in some of the basic pieces.
-const Database = require("./database");
-const bus = require("./event-bus");
-
 // Load our initial config.
 var configObj = require("./config");
 configObj.loadConfig();
+
+// Load in some of the basic pieces.
+const Database = require("./database");
+const bus = require("./event-bus");
 
 // Start stdin so we can trap signals.
 process.stdin.resume();

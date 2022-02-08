@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const database = require("../database");
 const fileUpload = require('express-fileupload');
-const bus = require("../event-bus");
+const config = require("../config");
 
 const MQTT = require("../Controllers/MQTT");
 const Settings = require("../Controllers/Settings");
@@ -84,8 +84,10 @@ class Web extends Library {
 
   async run() {
     this.logger.info("Starting up.");
-    this.server = this.app.listen(8080, () => {
-      this.logger.info(`petfeedd listening at http://localhost:8080`);
+    let webConfig = await config.getConfigEntries("web");
+
+    this.server = this.app.listen(webConfig.port, webConfig.address, () => {
+      this.logger.info(`petfeedd listening at http://:8080`);
     });
   }
 

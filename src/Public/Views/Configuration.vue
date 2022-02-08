@@ -17,6 +17,7 @@
           <nav class="nav nav-pills flex-column mt-md-5 mb-3">
             <router-link :to="{name: 'config.general'}" class="nav-link">General</router-link>
             <h6 class="nav-section-header">Core</h6>
+            <router-link :to="{name: 'config.web'}" class="nav-link">Web</router-link>
             <router-link :to="{name: 'config.feeds'}" class="nav-link">Feeds</router-link>
             <router-link :to="{name: 'config.servos'}" class="nav-link">Servos</router-link>
             <router-link :to="{name: 'config.buttons'}" class="nav-link">Buttons</router-link>

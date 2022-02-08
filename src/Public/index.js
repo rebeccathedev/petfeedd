@@ -43,6 +43,7 @@ const Sounds = () => import("./Views/Sounds.vue");
 const Email = () => import("./Views/Email.vue");
 const Twitter = () => import("./Views/Twitter.vue");
 const Onboard = () => import("./Views/Onboard.vue");
+const Web = () => import("./Views/Web.vue");
 
 // Create the routes.
 const routes = [
@@ -60,6 +61,12 @@ const routes = [
         meta: { title: "General Settings" },
         component: General,
         name: "config.general",
+      },
+      {
+        path: "web",
+        meta: { title: "Web Server Settings" },
+        component: Web,
+        name: "config.web",
       },
       {
         path: "feeds",

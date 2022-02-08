@@ -18,7 +18,7 @@ unless you want to use UTC for your feeders you will need to bring
 `/etc/localtime` into the container.
 
 ```
-$ docker run --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/petfeedd/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd
+$ docker run --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd
 ```
 
 ### Restarting Automatically
@@ -30,7 +30,7 @@ Otherwise, your cats will likely be very angry with you.
 So, a complete example of running petfeedd using Docker would be something like:
 
 ```
-$ docker run -d --restart always --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/petfeedd/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 -p 0.0.0.0:11211:11211 peckrob/petfeedd
+$ docker run -d --restart always --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 peckrob/petfeedd
 ```
 
 ### Using Docker Compose
@@ -57,11 +57,10 @@ services:
         restart: always
         volumes:
          - /etc/localtime:/etc/localtime
-         - /opt/petfeedd.db:/petfeedd/petfeedd.db
-         - /etc/petfeedd.conf:/petfeedd/petfeedd.conf
+         - /opt/petfeedd.db:/opt/petfeedd.db
+         - /etc/petfeedd.conf:/etc/petfeedd.conf
         ports:
          - 0.0.0.0:8080:8080
-         - 0.0.0.0:11211:11211
 ```
 
 Now you can just run:

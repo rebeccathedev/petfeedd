@@ -12,29 +12,15 @@ class Config {
   config = {
     general: {
       database: "petfeedd.db",
-      name: "My Pet Feeder",
-      paused: 0
     },
-
-    web: {
-      enabled: 1,
-      bind_address: "0.0.0.0",
-      bind_port: 8080,
-    },
-
-    logging: {
-      enabled: 1,
-      method: "stdout",
-    },
-
-    bonjour: {
-      enable: 1
-    }
   };
 
   loadConfig() {
     // Parse any command line args.
-    const args = commandLineArgs([{ name: "config", alias: "c", type: String }]);
+    const args = commandLineArgs([
+      { name: "config", alias: "c", type: String },
+      { name: "database", alias: "d", type: String }
+    ]);
 
     // Try to load from the environment.
     for (const [key, value] of Object.entries(process.env)) {
@@ -81,6 +67,14 @@ class Config {
       logger.info(
         "No config file specified. Proceeding with defaults and environment."
       );
+    }
+
+    if (args.database) {
+      if (!fs.existsSync(args.database)) {
+        logger.warn("Database was specified but does not exist. It may be created.");
+      }
+
+      this.config.general.database = args.database;
     }
   }
 
