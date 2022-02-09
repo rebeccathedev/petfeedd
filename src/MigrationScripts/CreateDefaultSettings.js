@@ -26,7 +26,7 @@ class CreateDefaultSettings extends MigrationScript {
               newSetting.key = key;
               newSetting.namespace = namespace;
 
-              Setting.create(newSetting);
+              await Setting.create(newSetting);
             }
           }
         }
