@@ -25,7 +25,7 @@ process.stdin.resume();
 
   // Run any migration scripts.
   let migrations = require("./MigrationScripts");
-  migrations.run(configObj.getConfig(), Database);
+  await migrations.run(configObj.getConfig(), Database);
 
   // Load the database into the config instance.
   configObj.initalizeDatabaseConfig(Database);

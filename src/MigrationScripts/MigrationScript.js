@@ -8,7 +8,7 @@ class MigrationScript {
     this.logger.level = "debug";
   }
 
-  migrate() {
+  async migrate() {
     this.logger.warning("Migration script implementation missing.");
   }
 }
