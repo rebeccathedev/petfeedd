@@ -33,17 +33,29 @@ class Feeder extends Library {
     this.logger.info("Attempting a feed.");
 
     try {
+      let Servo = this.database.modelFactory("Servo");
+      let servo = await Servo.findOne({
+        where: {
+          pin: feedData.pin
+        }
+      });
+
+      if (!servo) {
+        this.logger.warn("Sent a feed for a pin we couldn't find?");
+        return;
+      }
+
       if (!this.gpios[feedData.pin]) {
         this.gpios[feedData.pin] = new Gpio(feedData.pin, {
           mode: Gpio.OUTPUT,
         });
       }
 
-      let motor = this.gpios[feedData.pin];
+      let gpio = this.gpios[feedData.pin];
 
-      motor.servoWrite(2500);
+      servo.startSpin(gpio);
       await sleep(feedData.time * feedData.size * 1000);
-      motor.servoWrite(0);
+      servo.stopSpin(gpio);
 
       feedSuccessful = true;
     } catch (error) {
@@ -54,6 +66,8 @@ class Feeder extends Library {
     if (feedSuccessful) {
       this.logger.info("Feed successfully executed.");
       mqtt.publish(feedData.size);
+    } else {
+      this.logger.warn("Feed was unsuccessful.");
     }
 
     var feedName = feedData.name || "Received";

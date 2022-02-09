@@ -12,9 +12,18 @@
     <div class="servo mb-2 card" v-for="servo in servos" :key="servo.id">
       <div class="card-body">
         <div class="row">
-          <div class="form-group col-lg-9 col-md-12">
+          <div class="form-group col-lg-7 col-md-12">
             <label for="servo.name">Name</label>
             <input class="form-control" type="input" name="servo.name" v-model="servo.name">
+          </div>
+
+          <div class="form-group col-lg-2 col-md-6 mt-2 mt-lg-0">
+            <label for="servo.feed_time">Type</label>
+            <select class="form-select" v-model="servo.type">
+              <option v-for="(type, key) in types" :value="key" :key="key">
+                {{ type }}
+              </option>
+            </select>
           </div>
 
           <div class="form-group col-lg-2 col-md-6 mt-2 mt-lg-0">
@@ -43,6 +52,7 @@ export default {
     addServo() {
       this.servos.push({
         name: "New Servo",
+        type: "default",
         feed_time: 0.25,
         pin: 17
       });
@@ -75,7 +85,11 @@ export default {
   data() {
     return {
       servos: [],
-      servosToDelete: []
+      servosToDelete: [],
+      types: {
+        "default": "Standard",
+        "raw": "Raw"
+      }
     }
   },
   mounted() {
