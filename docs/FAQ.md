@@ -1,5 +1,32 @@
 # petfeedd FAQ
 
+## I am seeing GPIO initialization errors. How do I fix them?
+
+If your feeder isn't working and you are seeing things like the following in the
+logs:
+
+```
+2022-02-09 09:05:02 initMboxBlock: init mbox zaps failed
+[2022-02-09T09:05:02.106] [ERROR] Feeder - Could not enable GPIO.
+[2022-02-09T09:05:02.106] [ERROR] Feeder - Error: pigpio error -1 in gpioInitialise
+    at initializePigpio (/usr/src/app/node_modules/pigpio/pigpio.js:54:12)
+    at new Gpio (/usr/src/app/node_modules/pigpio/pigpio.js:158:5)
+    at Feeder.feed (/usr/src/app/Core/Feeder.js:1:842)
+[2022-02-09T09:05:02.110] [WARN] Feeder - Feed was unsuccessful.
+
+```
+
+The issue is related to memory usage and some odd behavior of one of the
+underlying libraries used by petfeedd. Somewhat counterintuitively, more *GPU*
+memory is needed. Fortunately, this is a relatively straightforward fix:
+
+```
+$ sudo raspi-config
+```
+
+Navigate to Performance Options -> GPU memory and bump it up some. I am running
+128 on my feeders. Save and reboot.
+
 ## Why did you rewrite petfeedd in Node?
 
 To be completely honest, because I don't really like Python that much. I find it
