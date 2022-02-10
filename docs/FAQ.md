@@ -1,6 +1,8 @@
 # petfeedd FAQ
 
-## I am seeing GPIO initialization errors. How do I fix them?
+## Troubleshooting
+
+### I am seeing GPIO initialization errors. How do I fix them?
 
 If your feeder isn't working and you are seeing things like the following in the
 logs:
@@ -27,7 +29,9 @@ $ sudo raspi-config
 Navigate to Performance Options -> GPU memory and bump it up some. I am running
 128 on my feeders. Save and reboot.
 
-## Why did you rewrite petfeedd in Node?
+## The Version 1.0 Rewrite
+
+### Why did you rewrite petfeedd in Node?
 
 To be completely honest, because I don't really like Python that much. I find it
 to be a clunky language with an annoyingly inconsistent syntax. And because of
@@ -49,7 +53,7 @@ has dramatically better performance.
 
 I guess that's a really long way of saying: because I wanted to. :)
 
-## What about the 0.2 version
+### What about the 0.2 version
 
 I have deleted the code for the 0.2 version, as it is in the same repository as
 this one, and I do not intend to continue to develop it further. However, I am
@@ -66,7 +70,7 @@ to use the Python code from source. But it should be with the clear
 understanding that doing so is **entirely unsupported** (like, I will delete
 tickets relating to it.)
 
-## Should I upgrade?
+### Should I upgrade?
 
 That is up to you! If petfeedd 0.2 is working for you and you don't want or need
 any of the new features, there is no need for you to upgrade and you are free to
