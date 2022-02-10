@@ -18,7 +18,7 @@ are complete and ready for immediate use. To install this way:
 
 3. `sudo touch /opt/petfeedd.db && sudo chown pi: /opt/petfeedd.db`
 
-4. `docker run --privileged -v /opt/petfeedd.db:/usr/src/app/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd`
+4. `docker run --privileged -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd`
 
 Navigate to the IP of your Raspberry Pi on port 8080, and you should see
 petfeedd running. It takes a bit to start, so give it about 20-30 seconds to get
@@ -27,7 +27,7 @@ need to configure it.
 
 The reason we pass `--privileged` to the container is to allow the container to
 access the host's GPIO pins. The reason that we pass
-`-v /opt/petfeedd.db:/petfeedd/petfeedd.db` is to store the DB outside the
+`-v /opt/petfeedd.db:/opt/petfeedd.db` is to store the DB outside the
 container.
 
 ### Different Architectures
