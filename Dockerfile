@@ -18,4 +18,4 @@ RUN apk add --update nodejs-lts npm python3 make g++ wget unzip && \
     apk del python3 make g++
 EXPOSE 8080
 WORKDIR /usr/src/app
-ENTRYPOINT [ "node", "index.js", "-d /opt/petfeedd.db" ]
+ENTRYPOINT [ "node", "index.js", "-d", "/opt/petfeedd.db" ]
