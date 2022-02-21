@@ -38,11 +38,11 @@ server {
     root /var/www/html;
     server_name _;
 
-	location / {
-		proxy_pass http://localhost:8080;
+    location / {
+        proxy_pass http://localhost:8080;
         auth_basic "petfeedd";
         auth_basic_user_file /etc/nginx/.htpasswd;
-	}
+    }
 }
 ```
 
