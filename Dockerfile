@@ -16,6 +16,7 @@ RUN apk add --update nodejs-lts npm python3 make g++ wget unzip && \
     mv node_modules /usr/src/app/ && \
     rm -rf /usr/src/petfeedd && \
     apk del python3 make g++
+COPY ./docker/start.sh /usr/src/app/start.sh
 EXPOSE 8080
 WORKDIR /usr/src/app
-ENTRYPOINT [ "node", "index.js", "-d", "/opt/petfeedd.db" ]
+ENTRYPOINT [ "/usr/src/app/start.sh" ]
