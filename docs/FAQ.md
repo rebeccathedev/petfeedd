@@ -1,5 +1,58 @@
 # petfeedd FAQ
 
+## Security
+
+### Why doesn't petfeedd implement usernames or API keys?
+
+Because it is beyond the scope of the project. Implementing usernames, passwords
+and API keys adds too much additional complexity to the project for use cases
+that are tiny in number. It simply isn't worth it.
+
+The goal of this project is to produce a pet feeder for home use. It is
+explicitly **not** designed to be connected to the Internet, and it assumes that
+the end user will have the pet feeder connected to their home network, which
+itself is protected by a router or firewall. If you can't trust the people and
+devices on your home network, you have much, much larger problems. :)
+
+### I still want username and passwords. Can you implement them?
+
+Again, implementing usernames, passwords and API keys in the petfeedd code is an
+explicit non-goal of this project and will not be added to the core
+functionality of the feeder.
+
+However, should you really wish to do this, my suggested approach is to place
+petfeedd behind a reverse proxy like nginx. For example you could use a config
+something like this:
+
+```shell
+$ sudo apt-get install apache2-utils
+$ sudo htpasswd -c /etc/nginx/.htpasswd user1
+```
+
+And then configure nginx like this:
+
+```nginx
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    server_name _;
+
+	location / {
+		proxy_pass http://localhost:8080;
+        auth_basic "petfeedd";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+	}
+}
+```
+
+Optionally, you could configure iptables to block connections to petfeedd so
+that only connections that go through the nginx proxy will work.
+
+```shell
+$ sudo iptables -A INPUT -p tcp --destination-port 8080 -j DROP
+```
+
 ## Troubleshooting
 
 ### I am seeing GPIO initialization errors. How do I fix them?
