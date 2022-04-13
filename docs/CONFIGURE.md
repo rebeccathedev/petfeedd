@@ -13,12 +13,11 @@ have to reconfigure some or all of your feeder when you migrate.
 ### A Note on Timezones
 
 Timezones inside the Docker container are independent of timezones on the
-device. Assuming you have run `sudo raspi-config` and set the timezone properly,
-unless you want to use UTC for your feeders you will need to bring
-`/etc/localtime` into the container.
+device. Unless you want to use UTC for your feeders, you will need to set the
+`TZ` environment variable to a valid timezone.
 
 ```
-$ docker run --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd
+$ docker run --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd
 ```
 
 ### Restarting Automatically
@@ -30,7 +29,7 @@ Otherwise, your cats will likely be very angry with you.
 So, a complete example of running petfeedd using Docker would be something like:
 
 ```
-$ docker run -d --restart always --privileged -v /etc/localtime:/etc/localtime -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 peckrob/petfeedd
+$ docker run -d --restart always --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 peckrob/petfeedd
 ```
 
 ### Using Docker Compose
@@ -56,11 +55,12 @@ services:
         image: peckrob/petfeedd
         restart: always
         volumes:
-         - /etc/localtime:/etc/localtime
          - /opt/petfeedd.db:/opt/petfeedd.db
          - /etc/petfeedd.conf:/etc/petfeedd.conf
         ports:
          - 0.0.0.0:8080:8080
+        environment:
+         - TZ=America/Chicago
 ```
 
 Now you can just run:
