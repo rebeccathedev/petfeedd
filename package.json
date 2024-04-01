@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Rob Peck <rob@robpeck.com>",
+  "author": "Rebecca Peck <me@rebeccapeck.org>",
   "license": "GPLv3",
   "dependencies": {
     "@babel/runtime": "^7.16.3",

@@ -62,7 +62,7 @@ Patches are always welcome if you have some cool functionality you would like to
 add.
 ## Author
 
-Rob Peck
+Rebecca Peck
 
 ## License
 
