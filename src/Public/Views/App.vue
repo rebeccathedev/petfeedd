@@ -104,7 +104,7 @@ export default {
     }).then(response => {
       response.data.forEach(setting => {
         this.transformSettings(setting);
-        this.$set(this.setting["general"], setting.key, setting);
+        this.setting["general"][setting.key] = setting;
       });
     });
   }

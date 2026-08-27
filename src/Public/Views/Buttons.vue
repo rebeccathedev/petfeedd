@@ -95,7 +95,7 @@ export default {
     });
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$off("config.save", this.save);
   }
 }

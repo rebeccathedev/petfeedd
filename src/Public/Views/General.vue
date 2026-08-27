@@ -44,7 +44,7 @@ export default {
     this.loadSettings(["bonjour", "general"]);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$off("config.save", this.save);
   }
 }
