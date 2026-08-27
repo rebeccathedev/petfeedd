@@ -1,69 +1,88 @@
-# petfeedd
+<div align="center">
 
-## About
+# 🐾 petfeedd
 
-petfeedd is a daemon for Raspberry Pi that will feed your pets. :)
+### A reusable Raspberry Pi pet-feeder daemon with scheduling, GPIO control, and a friendly web UI.
 
-Well, okay, obviously, it won't physically feed your pets. You'll still have to
-build the hardware part of the feeder. But it aims to wrap up the common
-functionality that pet feeders require into a format that can be reused for any
-number of feeder designs.
+[![CI and container release](https://github.com/rebeccathedev/petfeedd/actions/workflows/ci.yml/badge.svg)](https://github.com/rebeccathedev/petfeedd/actions/workflows/ci.yml)
 
-petfeedd provides:
+[Quick start](#-quick-start) · [Features](#-features) · [Hardware](#-supported-hardware) · [Documentation](#-documentation) · [Development](#-development)
 
-* A web interface for "programming" your feeder, that allows an arbitrary number
-of feeds of an arbitrary size.
+</div>
 
-* A RESTful API that can be used to write third-party clients.
+---
 
-* An auto-discovery protocol that can be used to find feeders on your network.
-Useful for writing third party clients.
+petfeedd packages the common software pieces of a DIY pet feeder into one reusable service. Bring the feeder, servo, and Raspberry Pi; petfeedd provides scheduling, GPIO control, history, integrations, and browser-based configuration.
 
-* A notification system that supports email, MQTT and Twitter.
+## ✨ Features
 
-petfeedd is implemented in NodeJS with Vue for the web front end.
+- **⏰ Precise schedules** — create any number of daily feeds with second-level timing and configurable portions.
+- **🍽️ Feed on demand** — trigger a configured feed from the web interface or API and see whether the hardware operation succeeded.
+- **🖥️ Web configuration** — manage feeds, servos, GPIO buttons, sounds, and integrations from a responsive interface.
+- **🔌 REST API** — build third-party clients and home-automation integrations.
+- **📡 Network discovery** — find feeders on the local network with Bonjour/Zeroconf.
+- **📨 Notifications** — publish feed activity through email, MQTT, sounds, and X/Twitter.
+- **📦 Multi-architecture container** — one GHCR image supports amd64, arm/v6, arm/v7, and arm64.
 
-### A Note About Security
+## 🚀 Quick start
 
-Let's have some common sense here. This is a pet feeder. Do not expose it to the
-Internet. It implements **no security** on the web interface. There are no users
-or passwords or API keys. Again, it's a pet feeder, not a banking site. Keep it
-safely behind your firewall.
+Install Docker on the Raspberry Pi, then run:
 
-If you are truly paranoid about this, you can use nginx as a proxy to add HTTP
-authentication, or simply not expose the web interface once you have it
-configured.
+```shell
+sudo touch /opt/petfeedd.db
+sudo chown "$(id -un)":"$(id -gn)" /opt/petfeedd.db
 
-## Supported Hardware
+docker pull ghcr.io/rebeccathedev/petfeedd:latest
+docker run --detach \
+  --name petfeedd \
+  --restart unless-stopped \
+  --privileged \
+  --env TZ=America/Denver \
+  --volume /opt/petfeedd.db:/opt/petfeedd.db \
+  --publish 8080:8080 \
+  ghcr.io/rebeccathedev/petfeedd:latest
+```
 
-petfeedd is reported to be working without modification on:
+Open `http://<raspberry-pi-address>:8080` and follow the onboarding flow. The container needs `--privileged` so it can operate the Pi's GPIO pins.
 
-* Raspberry Pi Zero
-* Raspberry Pi Zero 2
-* Raspberry Pi 3
-* Raspberry Pi 3B v1.2
-* Raspberry Pi 3B+
-* Raspberry Pi 4
+See the [installation guide](docs/INSTALL.md) for architecture details, source installation, and updates. See [configuration](docs/CONFIGURE.md) for timezone, restart, and Compose examples.
 
-I generally recommend not using the Zero for a project like this. The limited
-onboard memory tends to be problematic.
+## 🧰 Supported hardware
 
-## Documentation
+petfeedd has been reported working on Raspberry Pi Zero/Zero 2, Raspberry Pi 3/3B/3B+, and Raspberry Pi 4. The GHCR package supplies images for Pi Zero-class `arm/v6`, 32-bit `arm/v7`, 64-bit `arm64`, and `amd64` hosts.
 
-* [Installation](docs/INSTALL.md)
-* [Configuration](docs/CONFIGURE.md)
-* [API](docs/API.md)
-* [Auto Discovery](docs/DISCOVERY.md)
-* [FAQ](docs/FAQ.md)
+Lower-memory Pi Zero models may take longer to start and have less headroom than newer boards.
 
-## Contributing
+## 📚 Documentation
 
-Patches are always welcome if you have some cool functionality you would like to
-add.
-## Author
+- **[📦 Installation](docs/INSTALL.md)** — Docker quick start, supported architectures, source builds, and updates.
+- **[⚙️ Configuration](docs/CONFIGURE.md)** — timezone handling, persistent data, restart policies, and Docker Compose.
+- **[🌐 API](docs/API.md)** — REST endpoints, request formats, settings, and on-demand feeds.
+- **[📡 Discovery](docs/DISCOVERY.md)** — locating petfeedd instances with Bonjour/Zeroconf.
+- **[❓ FAQ](docs/FAQ.md)** — security guidance, GPIO troubleshooting, and project history.
 
-Rebecca Peck
+## 🔒 Security
 
-## License
+petfeedd is intended for a trusted home network. It does not provide users, passwords, or API keys, so do not expose port 8080 directly to the internet. If remote access is required, place it behind an authenticated reverse proxy or a private VPN. See the [security FAQ](docs/FAQ.md#security).
 
-GPLv3
+## 🛠️ Development
+
+Requirements: Node.js 22+, npm, and the native build dependencies required by `sqlite3` and `pigpio`.
+
+```shell
+npm ci --ignore-scripts
+npm test
+npx webpack --mode production
+```
+
+Container releases are built by GitHub Actions. A merge to `main` publishes the `latest` and commit-SHA tags to `ghcr.io/rebeccathedev/petfeedd` as a multi-architecture manifest.
+
+Contributions are welcome. Use `development` as the integration branch and open focused pull requests against it.
+
+## 👩‍💻 Author
+
+Rebecca Peck ([@rebeccathedev](https://github.com/rebeccathedev))
+
+## 📄 License
+
+GPLv3 — see [LICENSE.md](LICENSE.md).
