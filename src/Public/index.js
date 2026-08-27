@@ -1,5 +1,5 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createApp } from "vue";
+import { createRouter, createWebHashHistory } from "vue-router";
 import VueToast from "vue-toast-notification";
 import PortalVue from 'portal-vue'
 import Axios from "axios";
@@ -13,23 +13,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Collapse } from "bootstrap";
 import "vue-toast-notification/dist/theme-sugar.css";
 
-// Add plugins.
-Vue.use(VueRouter);
-Vue.use(VueToast);
-Vue.use(PortalVue);
-Vue.prototype.$http = Axios;
-Vue.prototype.$bootstrap = {
-  Collapse,
-};
-
-Vue.mixin(Settings);
-
 // Disable caching on Axios calls.
-Vue.prototype.$http.defaults.headers = {
-  "Cache-Control": "no-cache",
-  Pragma: "no-cache",
-  Expires: "0",
-};
+Axios.defaults.headers.common["Cache-Control"] = "no-cache";
+Axios.defaults.headers.common.Pragma = "no-cache";
+Axios.defaults.headers.common.Expires = "0";
 
 // Import all our views using promises.
 const Home = () => import("./Views/Home.vue");
@@ -115,7 +102,8 @@ const routes = [
 ];
 
 // Create the router.
-const router = new VueRouter({
+const router = createRouter({
+  history: createWebHashHistory(),
   routes,
   linkActiveClass: "active",
 });
@@ -124,8 +112,12 @@ const router = new VueRouter({
 let app = document.createElement("div");
 document.body.append(app);
 
-// Create the vue app!
-new Vue({
-  router,
-  render: (h) => h(App),
-}).$mount(app);
+// Create the Vue app.
+const vue = createApp(App);
+vue.use(router);
+vue.use(VueToast);
+vue.use(PortalVue);
+vue.mixin(Settings);
+vue.config.globalProperties.$http = Axios;
+vue.config.globalProperties.$bootstrap = { Collapse };
+vue.mount(app);
