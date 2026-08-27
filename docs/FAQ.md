@@ -114,9 +114,9 @@ leaving the docker images up for the time being if you want to continue using
 the 0.2 version. I *may* remove them at some point in the future, but I will
 give warning before I do.
 
-* `docker pull peckrob/petfeedd-arm32v7` - Raspberry Pi 2/2B/3/3B
-* `docker pull peckrob/petfeedd-arm32v6` - Raspperry Pi/Zero
-* `docker pull peckrob/petfeedd-amd64` - Intel x86
+* `docker pull rebeccathedev/petfeedd-arm32v7` - Raspberry Pi 2/2B/3/3B
+* `docker pull rebeccathedev/petfeedd-arm32v6` - Raspperry Pi/Zero
+* `docker pull rebeccathedev/petfeedd-amd64` - Intel x86
 
 You are welcome to fork the repo and revert the deletes if you want to continue
 to use the Python code from source. But it should be with the clear

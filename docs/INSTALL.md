@@ -14,11 +14,11 @@ are complete and ready for immediate use. To install this way:
    on your Raspberry Pi. You may need to log out and back in if you get
    permission errors.
 
-2. `docker pull peckrob/petfeedd`. Be patient, it will take a bit.
+2. `docker pull rebeccathedev/petfeedd`. Be patient, it will take a bit.
 
 3. `sudo touch /opt/petfeedd.db && sudo chown pi: /opt/petfeedd.db`
 
-4. `docker run --privileged -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd`
+4. `docker run --privileged -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 rebeccathedev/petfeedd`
 
 Navigate to the IP of your Raspberry Pi on port 8080, and you should see
 petfeedd running. It takes a bit to start, so give it about 20-30 seconds to get
@@ -32,7 +32,7 @@ container.
 
 ### Different Architectures
 
-The Docker image `peckrob/petfeedd` supports multiple architectures. The
+The Docker image `rebeccathedev/petfeedd` supports multiple architectures. The
 following architectures are currently supported.
 
 * `arm64v8` - Raspberry Pi 4
@@ -60,7 +60,7 @@ first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
 3. `cd /opt`
 
-4. `git clone git@github.com:peckrob/petfeedd.git`
+4. `git clone git@github.com:rebeccathedev/petfeedd.git`
 
 5. `cd petfeedd`
 
@@ -82,6 +82,6 @@ first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
 ## Updating
 
-Simply `docker pull peckrob/petfeedd` and restart the container. Or, if
+Simply `docker pull rebeccathedev/petfeedd` and restart the container. Or, if
 installed from source, `git pull` from the checkout and restart petfeedd using
 systemctl.
