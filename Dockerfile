@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3.22
 COPY ./src/ /usr/src/petfeedd/src/
 COPY ./package* /usr/src/petfeedd
 COPY ./*.config.js /usr/src/petfeedd
