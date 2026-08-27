@@ -41,7 +41,7 @@ module.exports = {
               this[setting.key] = setting.value;
               this._rawSettings.push(setting);
             } else {
-              this.$set(this[namespace], setting.key, setting.value);
+              this[namespace][setting.key] = setting.value;
               this._rawSettingsWithNamespaces[namespace].push(setting);
             }
           });

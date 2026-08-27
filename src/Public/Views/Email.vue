@@ -114,7 +114,7 @@ export default {
     this.loadSettings("email", true);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$off("config.save", this.save);
   }
 }
