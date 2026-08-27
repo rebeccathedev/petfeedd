@@ -7,8 +7,5 @@ module.exports = {
       }
     ]
   ],
-  "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-    "@babel/transform-runtime"
-  ]
+  "plugins": ["@babel/transform-runtime"]
 }
