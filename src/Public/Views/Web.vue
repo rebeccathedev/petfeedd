@@ -41,7 +41,7 @@ export default {
     this.loadSettings(["web"]);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$off("config.save", this.save);
   }
 }
