@@ -7,7 +7,7 @@ ifeq ($(DOCKER_TAG),)
 endif
 
 ifeq ($(DOCKER_PATH),)
-	DOCKER_PATH = rebeccathedev/petfeedd
+	DOCKER_PATH = ghcr.io/rebeccathedev/petfeedd
 endif
 
 ifeq ($(DOCKER_PLATFORMS),)
