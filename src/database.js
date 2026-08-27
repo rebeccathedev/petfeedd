@@ -1,4 +1,4 @@
-const Umzug = require("umzug");
+const { Umzug, SequelizeStorage } = require("umzug");
 const path = require("path");
 const log4js = require("log4js");
 
@@ -28,13 +28,19 @@ class Database {
     // Do any migrations.
     const umzug = new Umzug({
       migrations: {
-        path: path.join(__dirname, "./Migrations"),
-        params: [this.sequelize.getQueryInterface()],
+        glob: path.join(__dirname, "./Migrations/*.js"),
+        resolve: ({ name, path: migrationPath }) => {
+          const migration = require(migrationPath);
+          return {
+            name,
+            up: () => migration.up(this.sequelize.getQueryInterface()),
+            down: () => migration.down(this.sequelize.getQueryInterface()),
+          };
+        },
       },
-      storage: "sequelize",
-      storageOptions: {
-        sequelize: this.sequelize,
-      },
+      context: this.sequelize.getQueryInterface(),
+      storage: new SequelizeStorage({ sequelize: this.sequelize }),
+      logger: this.logger,
     });
 
     this.logger.info("Running migrations.");

@@ -1,7 +1,7 @@
 const database = require("../database");
 const Library = require("./Library");
 const config = require("../config");
-const TwitterAPI = require("twitter");
+const { TwitterApi } = require("twitter-api-v2");
 const bus = require("../event-bus");
 
 class Twitter extends Library {
@@ -22,11 +22,11 @@ class Twitter extends Library {
       this.config.access_token_key &&
       this.config.access_token_secret
     ) {
-      this.client = new TwitterAPI({
-        consumer_key: this.config.consumer_key,
-        consumer_secret: this.config.consumer_secret,
-        access_token_key: this.config.access_token_key,
-        access_token_secret: this.config.access_token_secret,
+      this.client = new TwitterApi({
+        appKey: this.config.consumer_key,
+        appSecret: this.config.consumer_secret,
+        accessToken: this.config.access_token_key,
+        accessSecret: this.config.access_token_secret,
       });
 
       this.feedCompleteCall = async (feedEvent) => {
@@ -47,19 +47,15 @@ class Twitter extends Library {
       }
     }
 
-    message = message.replace("{feeder_name}", this.config.feeder_name);
+    message = message.replace("{feeder_name}", this.feeder_name);
 
     this.logger.info("Sending tweet: " + message);
 
-    this.client.post(
-      "statuses/update",
-      { status: message },
-      function (error, tweet, response) {
-        if (error) {
-          this.logger.error("Send Tweet Failed: ", JSON.stringify(error));
-        }
-      }
-    );
+    try {
+      await this.client.v1.tweet(message);
+    } catch (error) {
+      this.logger.error("Send Tweet Failed: ", JSON.stringify(error));
+    }
   }
 
   async shutdown() {

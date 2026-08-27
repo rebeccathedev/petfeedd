@@ -1,7 +1,7 @@
 // Basic includes.
 const process = require('process');
 const log4js = require("log4js");
-const glob = require("glob");
+const { glob } = require("glob");
 let logger = log4js.getLogger("petfeedd");
 logger.level = "debug";
 
@@ -37,15 +37,15 @@ process.stdin.resume();
   instances.push(Database);
 
   // Loop and load all the core libraries.
-  glob(__dirname + "/Core/**.js", null, (er, files) => {
-    files.forEach(async (file) => {
+  const files = await glob(__dirname + "/Core/*.js");
+  for (const file of files) {
       // Create name from file.
       let name = file.split(/[\\/]/).pop().replace(".js", "").toLowerCase();
 
       let instance = require(file);
       if (instance.run) {
         // Start core lib.
-        instance.run();
+        await instance.run();
 
         // Add event bus entries for these.
         bus.on(name + ".reload", () => instance.reload());
@@ -54,8 +54,7 @@ process.stdin.resume();
         // Add it to the instances.
         instances.push(instance);
       }
-    });
-  });
+  }
 
   // This handles gracefully shutting down.
   async function shutdown(signal) {

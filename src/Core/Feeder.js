@@ -110,7 +110,7 @@ class Feeder extends Library {
       this.logger.error(error);
     }
 
-    bus.on("off", this.feedFunc);
+    bus.removeListener("feed", this.feedFunc);
   }
 }
 
