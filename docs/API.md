@@ -1,5 +1,7 @@
 # petfeedd API
 
+[README](../README.md) · [Installation](INSTALL.md) · [Configuration](CONFIGURE.md) · **API** · [Discovery](DISCOVERY.md) · [FAQ](FAQ.md)
+
 petfeedd exposes a web API that can be used to build third-party clients. The
 API is REST/JSON. The web interface in fact uses the API.
 
@@ -56,7 +58,7 @@ DELETE /api/feeds/:id
 ```json
 {
   "id": 1,
-  "time": "20:50",
+  "time": "20:50:05",
   "servo_id": 1,
   "name": "New Feed",
   "size": 1,
@@ -279,3 +281,9 @@ Reloads functionality for a specific core type. Valid types:
 GET    /api/util/shutdown
 ```
 Shuts down the feeder.
+
+For deployment details, see [Installation](INSTALL.md). For network discovery, see [Discovery](DISCOVERY.md).
+
+---
+
+[README](../README.md) · [Installation](INSTALL.md) · [Configuration](CONFIGURE.md) · **API** · [Discovery](DISCOVERY.md) · [FAQ](FAQ.md)

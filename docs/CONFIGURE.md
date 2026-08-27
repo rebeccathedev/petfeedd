@@ -1,5 +1,7 @@
 # petfeedd Configuration
 
+[README](../README.md) · [Installation](INSTALL.md) · **Configuration** · [API](API.md) · [Discovery](DISCOVERY.md) · [FAQ](FAQ.md)
+
 A major change from previous versions of petfeedd are that the new node-based
 petfeedd's configuration is entirely editable from the web interface and
 entirely stored in the database.
@@ -17,7 +19,7 @@ device. Unless you want to use UTC for your feeders, you will need to set the
 `TZ` environment variable to a valid timezone.
 
 ```
-$ docker run --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 rebeccathedev/petfeedd
+$ docker run --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 ghcr.io/rebeccathedev/petfeedd:latest
 ```
 
 ### Restarting Automatically
@@ -29,30 +31,24 @@ Otherwise, your cats will likely be very angry with you.
 So, a complete example of running petfeedd using Docker would be something like:
 
 ```
-$ docker run -d --restart always --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 rebeccathedev/petfeedd
+$ docker run -d --restart always --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/etc/petfeedd.conf -p 0.0.0.0:8080:8080 ghcr.io/rebeccathedev/petfeedd:latest
 ```
 
 ### Using Docker Compose
 
-Once the command gets that large, you may consider using `docker-compose` for
-better reproducability.
+Once the command gets that large, you may prefer Docker Compose for a reusable
+configuration.
 
-If you haven't already installed `docker-compose` you can do so with:
-
-```
-$ sudo apt update
-$ sudo apt install -y python python-pip
-$ sudo pip install docker-compose
-```
+Install Docker Engine with the Compose plugin by following the
+[official Docker instructions](https://docs.docker.com/engine/install/).
 
 Here is an example `docker-compose.yml` file representing the above command.
 
 ```yml
-version: '3'
 services:
     petfeedd:
         privileged: true
-        image: rebeccathedev/petfeedd
+        image: ghcr.io/rebeccathedev/petfeedd:latest
         restart: always
         volumes:
          - /opt/petfeedd.db:/opt/petfeedd.db
@@ -66,5 +62,11 @@ services:
 Now you can just run:
 
 ```
-$ docker-compose up -d
+$ docker compose up -d
 ```
+
+For initial setup and supported CPU architectures, see [Installation](INSTALL.md). For programmatic settings, see the [API reference](API.md#settings).
+
+---
+
+[README](../README.md) · [Installation](INSTALL.md) · **Configuration** · [API](API.md) · [Discovery](DISCOVERY.md) · [FAQ](FAQ.md)

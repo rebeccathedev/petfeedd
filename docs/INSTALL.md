@@ -1,5 +1,7 @@
 # petfeedd Installation
 
+[README](../README.md) · **Installation** · [Configuration](CONFIGURE.md) · [API](API.md) · [Discovery](DISCOVERY.md) · [FAQ](FAQ.md)
+
 No matter which installation path you choose, the first step is to install
 [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) and configure to
 your liking.
@@ -14,11 +16,11 @@ are complete and ready for immediate use. To install this way:
    on your Raspberry Pi. You may need to log out and back in if you get
    permission errors.
 
-2. `docker pull rebeccathedev/petfeedd`. Be patient, it will take a bit.
+2. `docker pull ghcr.io/rebeccathedev/petfeedd:latest`. Be patient, it will take a bit.
 
 3. `sudo touch /opt/petfeedd.db && sudo chown pi: /opt/petfeedd.db`
 
-4. `docker run --privileged -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 rebeccathedev/petfeedd`
+4. `docker run --privileged -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 ghcr.io/rebeccathedev/petfeedd:latest`
 
 Navigate to the IP of your Raspberry Pi on port 8080, and you should see
 petfeedd running. It takes a bit to start, so give it about 20-30 seconds to get
@@ -32,19 +34,14 @@ container.
 
 ### Different Architectures
 
-The Docker image `rebeccathedev/petfeedd` supports multiple architectures. The
-following architectures are currently supported.
+The Docker image `ghcr.io/rebeccathedev/petfeedd:latest` supports multiple architectures. Docker automatically pulls the correct image for the host.
 
-* `arm64v8` - Raspberry Pi 4
-* `arm32v7` - Raspberry Pi 2/2B/3/3B
-* `arm32v6` - Raspperry Pi/Zero/Zero 2
-* `amd64` - Intel x86
+* `linux/arm64` - 64-bit Raspberry Pi 3/4/5
+* `linux/arm/v7` - 32-bit Raspberry Pi 2/3
+* `linux/arm/v6` - Raspberry Pi 1/Zero
+* `linux/amd64` - Intel and AMD x86-64
 
-Unofficially, the underlying alpine base image also supports `i386`, `ppc64le`
-and `s390x`. These are not supported directly by petfeedd, but I know of no
-reason why they wouldn't work. If anyone needs support for these architectures
-(and can either provide test hardware or be a guinea pig) I can build for these
-arches too.
+These four variants are published together under the same tag in GitHub Container Registry.
 
 ## Building from Source
 
@@ -56,7 +53,7 @@ first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
 1. `apt-get install -y git pigpio libpigpio1`
 
-2. `curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - && sudo apt-get install -y nodejs`
+2. Install Node.js 22 or later and npm.
 
 3. `cd /opt`
 
@@ -64,9 +61,9 @@ first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
 5. `cd petfeedd`
 
-6. `npm install`
+6. `npm ci`
 
-7. `npx webpack`
+7. `npx webpack --mode production`
 
 10. `useradd -d /opt/petfeedd -G gpio petfeedd`
 
@@ -82,6 +79,10 @@ first-generation Raspberry Pi) and cannot spare the resources to run Docker.
 
 ## Updating
 
-Simply `docker pull rebeccathedev/petfeedd` and restart the container. Or, if
+Simply `docker pull ghcr.io/rebeccathedev/petfeedd:latest` and restart the container. Or, if
 installed from source, `git pull` from the checkout and restart petfeedd using
 systemctl.
+
+---
+
+[README](../README.md) · **Installation** · [Configuration](CONFIGURE.md) · [API](API.md) · [Discovery](DISCOVERY.md) · [FAQ](FAQ.md)
