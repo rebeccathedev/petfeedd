@@ -17,7 +17,7 @@ device. Unless you want to use UTC for your feeders, you will need to set the
 `TZ` environment variable to a valid timezone.
 
 ```
-$ docker run --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 peckrob/petfeedd
+$ docker run --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -p 0.0.0.0:8080:8080 rebeccathedev/petfeedd
 ```
 
 ### Restarting Automatically
@@ -29,7 +29,7 @@ Otherwise, your cats will likely be very angry with you.
 So, a complete example of running petfeedd using Docker would be something like:
 
 ```
-$ docker run -d --restart always --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 peckrob/petfeedd
+$ docker run -d --restart always --privileged -e TZ=America/Chicago -v /opt/petfeedd.db:/opt/petfeedd.db -v /etc/petfeedd.conf:/petfeedd/petfeedd.conf -p 0.0.0.0:8080:8080 rebeccathedev/petfeedd
 ```
 
 ### Using Docker Compose
@@ -52,7 +52,7 @@ version: '3'
 services:
     petfeedd:
         privileged: true
-        image: peckrob/petfeedd
+        image: rebeccathedev/petfeedd
         restart: always
         volumes:
          - /opt/petfeedd.db:/opt/petfeedd.db
