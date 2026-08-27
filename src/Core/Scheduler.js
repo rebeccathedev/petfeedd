@@ -29,8 +29,10 @@ class Scheduler extends Library {
 
   async schedule(feed) {
     let rule = new schedule.RecurrenceRule();
-    rule.hour = feed.time.split(":")[0];
-    rule.minute = feed.time.split(":")[1];
+    const [hour, minute, second = "0"] = feed.time.split(":");
+    rule.hour = Number(hour);
+    rule.minute = Number(minute);
+    rule.second = Number(second);
 
     var job = schedule.scheduleJob(rule, () => {
       this.feed(feed, job);
