@@ -7,7 +7,7 @@ RUN apk add --update nodejs-lts npm python3 make g++ wget unzip && \
     wget https://github.com/joan2937/pigpio/archive/refs/tags/v79.zip && \
     unzip v79.zip && \
     cd pigpio-79 && \
-    sed -i -e 's/ldconfig/echo ldconfig disabled/g' Makefile && \
+    sed -i -e 's/ldconfig/echo ldconfig disabled/g' -e '/if which python/d' Makefile && \
     make && make install && \
     cd .. && \
     npm ci && \
