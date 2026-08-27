@@ -1,6 +1,7 @@
 const database = require("../database");
 const Library = require("./Library");
 const Gpio = require('pigpio').Gpio;
+const bus = require("../event-bus");
 
 class Buttons extends Library {
   constructor(database) {
@@ -26,7 +27,7 @@ class Buttons extends Library {
           });
 
           gpioObj.on("interrupt", async level => {
-            let servo = await Servo.findByPk(listener.servo_id);
+            let servo = await Servo.findByPk(button.servo_id);
 
             bus.emit("feed", {
               pin: servo.pin,
@@ -37,7 +38,7 @@ class Buttons extends Library {
             });
           });
 
-          button.gpio = gpioObj.off
+          button.gpio = gpioObj;
 
           this.buttons.push(button);
         } catch (error) {

@@ -47,14 +47,14 @@ class Twitter extends Library {
       }
     }
 
-    message = message.replace("{feeder_name}", this.config.feeder_name);
+    message = message.replace("{feeder_name}", this.feeder_name);
 
     this.logger.info("Sending tweet: " + message);
 
     this.client.post(
       "statuses/update",
       { status: message },
-      function (error, tweet, response) {
+      (error, tweet, response) => {
         if (error) {
           this.logger.error("Send Tweet Failed: ", JSON.stringify(error));
         }

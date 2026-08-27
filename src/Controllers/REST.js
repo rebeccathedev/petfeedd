@@ -107,7 +107,7 @@ class REST {
             }
           }
 
-          data.save();
+          await data.save();
           ret.push(data);
         } else {
           let data = await Model.create(obj);
@@ -118,7 +118,7 @@ class REST {
 
     bus.emit(this.namespace + ".reload");
 
-    return response.send(data);
+    return response.send(ret);
   }
 
   async delete(request, response) {
@@ -129,7 +129,7 @@ class REST {
       return response.status(404).send();
     }
 
-    data.destroy();
+    await data.destroy();
     bus.emit(this.namespace + ".reload");
     return response.send(data);
   }
