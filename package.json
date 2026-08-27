@@ -37,16 +37,16 @@
     "nodemailer": "^9.0.5",
     "pigpio": "^3.3.1",
     "play-sound": "^1.1.6",
-    "portal-vue": "^2.1.7",
+    "portal-vue": "^3.0.0",
     "sequelize": "^6.37.8",
     "sleepjs": "^4.0.3",
     "sqlite3": "^6.0.1",
     "twitter-api-v2": "^1.29.0",
     "umzug": "^3.8.3",
-    "vue": "^2.7.16",
+    "vue": "^3.5.42",
     "vue-form-wizard": "^0.8.4",
     "vue-router": "^3.6.5",
-    "vue-toast-notification": "^0.6.2"
+    "vue-toast-notification": "^3.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
