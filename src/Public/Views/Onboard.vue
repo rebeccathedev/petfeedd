@@ -78,7 +78,7 @@
       <div class="row">
         <label for="feed.time" class="col-sm-2 col-form-label">Time</label>
         <div class="col-sm-10 col-md-4 col-lg-2">
-          <input class="form-control" type="time" name="feed.time" value="00:00" step="60" v-model="feed.time">
+          <input class="form-control" type="time" name="feed.time" value="00:00:00" step="1" v-model="feed.time">
         </div>
       </div>
       <div class="row mb-3">
@@ -204,7 +204,7 @@ export default {
       feed: {
         name: "Default",
         size: 1,
-        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false})
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false})
       }
     }
   }

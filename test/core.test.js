@@ -35,16 +35,34 @@ test("scheduler creates, executes, and cancels jobs", async () => {
     scheduleJob(rule, callback) { const job = { rule, callback, nextInvocation: () => "tomorrow" }; jobs.push(job); return job; },
     cancelJob(job) { job.cancelled = true; },
   };
-  const database = { modelFactory: name => name === "Feed" ? { findAll: async () => [{ time: "07:30", name: "breakfast" }] } : { findByPk: async () => ({ pin: 12, feed_time: 1.5 }) } };
+  const database = { modelFactory: name => name === "Feed" ? { findAll: async () => [{ time: "07:30:05", name: "breakfast" }] } : { findByPk: async () => ({ pin: 12, feed_time: 1.5 }) } };
   const scheduler = requireWithMocks("../src/Core/Scheduler", {
     "node-schedule": schedule, moment: {}, "../event-bus": { emit: (...args) => emitted.push(args) }, "../database": database,
   });
   scheduler.database = database;
   await scheduler.run();
-  assert.equal(jobs[0].rule.hour, "07");
-  assert.equal(jobs[0].rule.minute, "30");
+  assert.equal(jobs[0].rule.hour, 7);
+  assert.equal(jobs[0].rule.minute, 30);
+  assert.equal(jobs[0].rule.second, 5);
   await scheduler.feed({ servo_id: 1, size: 2, name: "breakfast" }, jobs[0]);
   assert.deepEqual(emitted[0], ["feed", { pin: 12, time: 1.5, size: 2, name: "breakfast" }]);
   await scheduler.shutdown();
   assert.equal(jobs[0].cancelled, true);
+});
+
+test("scheduler defaults legacy minute-only feed times to zero seconds", async () => {
+  let scheduledRule;
+  class Rule {}
+  const database = { modelFactory: () => ({ findAll: async () => [{ time: "12:15", name: "lunch" }] }) };
+  const scheduler = requireWithMocks("../src/Core/Scheduler", {
+    "node-schedule": {
+      RecurrenceRule: Rule,
+      scheduleJob(rule) { scheduledRule = rule; return { nextInvocation: () => "later" }; },
+    },
+    moment: {}, "../event-bus": { emit() {} }, "../database": database,
+  });
+  scheduler.database = database;
+  scheduler.jobs = [];
+  await scheduler.run();
+  assert.equal(scheduledRule.second, 0);
 });
