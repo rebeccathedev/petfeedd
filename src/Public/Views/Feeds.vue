@@ -22,7 +22,7 @@
 
           <div class="form-group col-lg-2 col-md-6 mt-2 mt-lg-0">
             <label for="feed.time">Time</label>
-            <input class="form-control" type="time" name="feed.time" value="00:00" step="60" v-model="feed.time">
+            <input class="form-control" type="time" name="feed.time" value="00:00:00" step="1" v-model="feed.time">
           </div>
 
           <div class="form-group col-lg-1 col-md-6 mt-2 mt-lg-0">
@@ -48,7 +48,7 @@ export default {
         name: "New Feed",
         servo_id: 1,
         size: 1,
-        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false})
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false})
       });
     },
 
