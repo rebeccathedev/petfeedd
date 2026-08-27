@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="d-flex justify-content-center mb-2">
-      <button class="btn btn-primary m-1" v-for="feed in feeds" :key="feed.id" @click="doFeed(feed)">
-        Feed {{ feed.name }}
+      <button class="btn btn-primary m-1" v-for="feed in feeds" :key="feed.id" :disabled="feeding === feed.id" @click="doFeed(feed)">
+        {{ feeding === feed.id ? "Feeding…" : `Feed ${feed.name}` }}
       </button>
     </div>
 
@@ -44,13 +44,20 @@
 <script>
 export default {
   methods: {
-    doFeed(feed) {
-      this.$http({
-        url: "/api/feeds/" + feed.id + "/feed",
-        method: "GET"
-      }).then(response => {
-        this.getEvents();
-      });
+    async doFeed(feed) {
+      this.feeding = feed.id;
+      try {
+        await this.$http({
+          url: "/api/feeds/" + feed.id + "/feed",
+          method: "GET"
+        });
+        await this.getEvents();
+      } catch (error) {
+        const message = error.response?.data?.error || "The feeder could not complete the feed";
+        this.$toast.open({ message, type: "error" });
+      } finally {
+        this.feeding = null;
+      }
     },
 
     getEvents() {
@@ -87,7 +94,8 @@ export default {
   data() {
     return {
       events: [],
-      feeds: []
+      feeds: [],
+      feeding: null
     }
   },
 
