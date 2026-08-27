@@ -1,5 +1,7 @@
 # petfeedd FAQ
 
+[README](../README.md) · [Installation](INSTALL.md) · [Configuration](CONFIGURE.md) · [API](API.md) · [Discovery](DISCOVERY.md) · **FAQ**
+
 ## Security
 
 ### Why doesn't petfeedd implement usernames or API keys?
@@ -114,9 +116,11 @@ leaving the docker images up for the time being if you want to continue using
 the 0.2 version. I *may* remove them at some point in the future, but I will
 give warning before I do.
 
-* `docker pull rebeccathedev/petfeedd-arm32v7` - Raspberry Pi 2/2B/3/3B
-* `docker pull rebeccathedev/petfeedd-arm32v6` - Raspperry Pi/Zero
-* `docker pull rebeccathedev/petfeedd-amd64` - Intel x86
+The maintained Node release is published as one multi-architecture image:
+
+`docker pull ghcr.io/rebeccathedev/petfeedd:latest`
+
+Docker selects the appropriate amd64, arm/v6, arm/v7, or arm64 variant automatically. See [Installation](INSTALL.md#different-architectures) for the Raspberry Pi model mapping.
 
 You are welcome to fork the repo and revert the deletes if you want to continue
 to use the Python code from source. But it should be with the clear
@@ -128,3 +132,7 @@ tickets relating to it.)
 That is up to you! If petfeedd 0.2 is working for you and you don't want or need
 any of the new features, there is no need for you to upgrade and you are free to
 keep using it. But all development going forward is on the new Node version.
+
+---
+
+[README](../README.md) · [Installation](INSTALL.md) · [Configuration](CONFIGURE.md) · [API](API.md) · [Discovery](DISCOVERY.md) · **FAQ**

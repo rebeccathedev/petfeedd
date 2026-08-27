@@ -100,7 +100,7 @@ export default {
       this.servos = response.data;
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$off("config.save", this.save);
   }
 }

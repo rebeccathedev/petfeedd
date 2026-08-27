@@ -2,6 +2,7 @@ const { VueLoaderPlugin } = require("vue-loader");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 const path = require("path");
 
 module.exports = {
@@ -57,13 +58,18 @@ module.exports = {
       ],
     }),
     new VueLoaderPlugin(),
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+    }),
     new HtmlWebpackPlugin({
       title: "petfeedd"
     }),
   ],
   resolve: {
     alias: {
-      vue$: "vue/dist/vue.runtime.esm.js",
+      vue$: "vue/dist/vue.esm-bundler.js",
     },
     extensions: ["*", ".js", ".vue", ".json"],
   },

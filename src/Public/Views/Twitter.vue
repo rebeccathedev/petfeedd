@@ -69,7 +69,7 @@ export default {
     this.loadSettings("twitter", true);
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.$parent.$off("config.save", this.save);
   }
 }

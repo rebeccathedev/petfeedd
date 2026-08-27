@@ -1,6 +1,6 @@
 {
   "name": "petfeedd",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A pet feeding daemon.",
   "main": "index.js",
   "scripts": {
@@ -37,16 +37,16 @@
     "nodemailer": "^9.0.5",
     "pigpio": "^3.3.1",
     "play-sound": "^1.1.6",
-    "portal-vue": "^2.1.7",
+    "portal-vue": "^3.0.0",
     "sequelize": "^6.37.8",
     "sleepjs": "^4.0.3",
     "sqlite3": "^6.0.1",
     "twitter-api-v2": "^1.29.0",
     "umzug": "^3.8.3",
-    "vue": "^2.7.16",
-    "vue-form-wizard": "^0.8.4",
-    "vue-router": "^3.6.5",
-    "vue-toast-notification": "^0.6.2"
+    "vue": "^3.5.42",
+    "vue-router": "^4.6.4",
+    "vue-toast-notification": "^3.1.3",
+    "vue3-form-wizard": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
@@ -63,8 +63,8 @@
     "sequelize-cli": "^6.6.5",
     "style-loader": "^4.0.0",
     "terser": "^5.51.2",
-    "vue-loader": "^15.11.1",
-    "vue-template-compiler": "^2.7.16",
+    "@vue/compiler-sfc": "^3.5.42",
+    "vue-loader": "^17.4.2",
     "webpack": "^5.110.0",
     "webpack-cli": "^7.2.2",
     "webpack-merge": "^6.0.1"
