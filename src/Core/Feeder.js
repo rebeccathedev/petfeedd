@@ -25,7 +25,7 @@ class Feeder extends Library {
     let isPaused = parseInt(await config.getConfigEntry("general", "paused"));
     if (isPaused) {
       this.logger.warning("Avoiding a feed because we are paused.");
-      return;
+      return { feedEvent: null, successful: false, reason: "paused" };
     }
 
     var feedSuccessful = false;
@@ -42,7 +42,7 @@ class Feeder extends Library {
 
       if (!servo) {
         this.logger.warn("Sent a feed for a pin we couldn't find?");
-        return;
+        return { feedEvent: null, successful: false, reason: "servo_not_found" };
       }
 
       if (!this.gpios[feedData.pin]) {
@@ -99,6 +99,8 @@ class Feeder extends Library {
     } else {
       bus.emit("feed.failed", f);
     }
+
+    return { feedEvent: f, successful: feedSuccessful };
   }
 
   async shutdown() {
