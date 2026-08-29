@@ -57,10 +57,24 @@ class Web extends Library {
 
     // Build the util routes
     let util = new Util(database);
-    apiRouter.get("/util/emailtest", this.wrapper(util, "testEmail"));
-    apiRouter.get("/util/reload", this.wrapper(util, "reload"));
-    apiRouter.get("/util/reload/:type", this.wrapper(util, "reloadCore"));
-    apiRouter.get("/util/shutdown", this.wrapper(util, "shutdown"));
+    apiRouter.get("/util/emailtest", this.requireLocal, this.wrapper(util, "testEmail"));
+    apiRouter.get("/util/reload", this.requireLocal, this.wrapper(util, "reload"));
+    apiRouter.get("/util/reload/:type", this.requireLocal, this.wrapper(util, "reloadCore"));
+    apiRouter.get("/util/shutdown", this.requireLocal, this.wrapper(util, "shutdown"));
+  }
+
+  requireLocal(request, response, next) {
+    const ip = request.ip || request.connection.remoteAddress || "";
+    const isLocal = ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(ip);
+
+    if (!isLocal) {
+      return response.status(403).json({
+        status: false,
+        error: "Forbidden: administrative endpoints are only accessible from localhost."
+      });
+    }
+
+    next();
   }
 
   buildCrud(apiRouter, path, controller) {
