@@ -86,3 +86,6 @@ Rebecca Peck ([@rebeccathedev](https://github.com/rebeccathedev))
 ## 📄 License
 
 GPLv3 — see [LICENSE.md](LICENSE.md).
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q3W726YTHU)
