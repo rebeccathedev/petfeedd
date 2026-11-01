@@ -34,7 +34,7 @@
     "nanobus": "^4.5.0",
     "node-aplay": "^1.0.3",
     "node-schedule": "^2.1.1",
-    "nodemailer": "^9.0.5",
+    "nodemailer": "^10.1.4",
     "pigpio": "^3.3.1",
     "play-sound": "^1.1.6",
     "portal-vue": "^3.0.0",
