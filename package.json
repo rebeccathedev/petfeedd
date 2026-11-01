@@ -16,7 +16,7 @@
     "@babel/runtime": "^7.29.2",
     "@popperjs/core": "^2.11.8",
     "axios": "^1.20.0",
-    "body-parser": "^2.3.0",
+    "body-parser": "^2.4.0",
     "bonjour-service": "^1.4.4",
     "boolean": "^3.2.0",
     "bootstrap": "^5.3.8",
